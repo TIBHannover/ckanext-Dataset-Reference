@@ -1,0 +1,13 @@
+.pub-type-select{
+    width: 100%;
+}
+.years-select{
+    width: 60%;
+}
+#article-month{
+    width: 100%;
+}
+
+.pub-type-section{
+    display: none;
+}

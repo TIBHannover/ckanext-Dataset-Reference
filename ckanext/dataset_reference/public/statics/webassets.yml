@@ -1,0 +1,37 @@
+publication-info-table-js:  
+  output: ckanext-dataset-reference/%(version)s_my.js
+  extra:
+    preload:
+      - base/main
+      - vendor/vendor
+      - vendor/bootstrap
+      - vendor/jquery
+      - vendor/jquery.ui.core
+      - vendor/select2
+  contents:
+    - publication_info_table.js
+
+
+publication-info-table-css:
+  output: ckanext-dataset-reference/%(version)s_my.css
+  contents:
+    - publication_info.css
+
+publication-add-manually-css:
+  output: ckanext-dataset-reference/%(version)s_my.css
+  contents:
+    - add_manually.css
+
+publication-add-manually-js:  
+  output: ckanext-dataset-reference/%(version)s_my.js
+  extra:
+    preload:
+      - base/main
+      - vendor/vendor
+      - vendor/bootstrap
+      - vendor/jquery
+      - vendor/jquery.ui.core
+      - vendor/select2
+  contents:
+    - add_manually.js
+
