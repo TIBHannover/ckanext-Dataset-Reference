@@ -47,16 +47,18 @@ class LinkReferenceController():
         package = toolkit.get_action('package_show')({}, {'name_or_id': name})
         result = res_object.get_by_package(name=name)
         return_rows = ""
-        if result == false:
+        if result == false: ## there is no reference for this dataset
             return '0'
         for source in result:
             if not source.citation:
                 continue
             meta_data = {}
             meta_data['cite'] = source.citation
-            if meta_data:
+            if source.doi != '':
                 meta_data['link'] = source.doi
-                return_rows += Helper.create_table_row(meta_data, source.id, Helper.check_access_edit_package(package['id']))
+            else:
+                meta_data['link'] = source.url
+            return_rows += Helper.create_table_row(meta_data, source.id, Helper.check_access_edit_package(package['id']))
         
         if return_rows != "":
             return return_rows
