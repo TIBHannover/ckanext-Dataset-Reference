@@ -42,21 +42,21 @@ class PackageReferenceLink(domain_object.DomainObject):
         self.doi = reference_object['doi']        
         self.create_at = reference_object['create_at']
         self.citation = reference_object['citation']
-        self.authors = reference_object['authors']
-        self.title = reference_object['title']
-        self.year = reference_object['year']
-        self.url = reference_object['url']
-        self.ref_type = reference_object['ref_type']
-        self.publisher = reference_object['publisher']
-        self.place = reference_object['place']
-        self.journal = reference_object['journal']
-        self.volume = reference_object['volume']
-        self.issue = reference_object['issue']
-        self.page = reference_object['page']
-        self.proceeding = reference_object['proceeding']
-        self.access_date = reference_object['access_date']
-        self.organization = reference_object['organization']
-        self.thesis_type = reference_object['thesis_type']
+        self.authors = reference_object.get('authors')
+        self.title = reference_object.get('title')
+        self.year = reference_object.get('year')
+        self.url = reference_object.get('url')
+        self.ref_type = reference_object.get('ref_type')
+        self.publisher = reference_object.get('publisher')
+        self.place = reference_object.get('place')
+        self.journal = reference_object.get('journal')
+        self.volume = reference_object.get('volume')
+        self.issue = reference_object.get('issue')
+        self.page = reference_object.get('page')
+        self.proceeding = reference_object.get('proceeding')
+        self.access_date = reference_object.get('access_date')
+        self.organization = reference_object.get('organization')
+        self.thesis_type = reference_object.get('thesis_type')
 
     
     @classmethod
