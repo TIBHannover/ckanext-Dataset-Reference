@@ -2,6 +2,7 @@ $(document).ready(function(){
     $("#pub-type").select2();
     $('#years-select').select2();
     $('select.month-select').select2();
+    $("#thesis-type").select2();
 
     $('#pub-type').change(function(){
         let pubType = $(this).select2('data').text;

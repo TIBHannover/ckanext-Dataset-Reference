@@ -48,10 +48,10 @@
                 }}
             </div>
             <div class="col-sm-9">
-                {{ macro.input('publisher',
-                    id='publisher',
+                {{ macro.input('url',
+                    id='ref-url',
                     type='text',
-                    label=_('Publisher'),                    
+                    label=_('Reference URL / DOI'),                    
                     classes=['control-full']) 
                 }}
             </div>
@@ -63,7 +63,7 @@
                     {{ macro.input('article-journal',
                         id='article-journal',
                         type='text',
-                        label=_('Journal'),                    
+                        label=_('Journal Title'),                    
                         classes=['control-full']) 
                     }}
                 </div>
@@ -74,6 +74,14 @@
                         id='article-volume',
                         type='text',
                         label=_('Volume'),                    
+                        classes=['control-full']) 
+                    }}
+                </div>
+                <div class="col-sm-4">
+                    {{ macro.input('article-issue',
+                        id='article-issue',
+                        type='text',
+                        label=_('Issue Number'),                  
                         classes=['control-full']) 
                     }}
                 </div>
@@ -91,29 +99,38 @@
 
         <section id='conference-section' class='pub-type-section'>
             <div class='row'>
-                <div class="col-sm-6">
-                    {{ macro.input('conf-booktitle',
-                        id='conf-booktitle',
+                <div class="col-sm-8">
+                    {{ macro.input('conf-proceeding',
+                        id='conf-proceeding',
                         type='text',
-                        label=_('Book Title'),                    
+                        label=_('Proceeding Title'),                    
                         classes=['control-full']) 
                     }}
                 </div>
-                <div class="col-sm-6">
-                    {{ macro.input('conf-series',
-                        id='conf-series',
+                <div class="col-sm-4">
+                    {{ macro.input('conf-proceeding-date',
+                        id='conf-proceeding-date',
                         type='text',
-                        label=_('Series'),
+                        label=_('Proceeding location/date'),
+                        placeholder='Ex: Germany, May 21-23, 2020',
                         classes=['control-full']) 
                     }}
                 </div>                
             </div>
             <div class='row'>
-                <div class="col-sm-8">
-                    {{ macro.input('conf-address',
-                        id='conf-address',
+                <div class="col-sm-4">
+                    {{ macro.input('conf-publisher',
+                        id='conf-publisher',
                         type='text',
-                        label=_('Address'),                    
+                        label=_('Publisher'),                    
+                        classes=['control-full']) 
+                    }}
+                </div>
+                <div class="col-sm-4">
+                    {{ macro.input('conf-pub-address',
+                        id='conf-pub-address',
+                        type='text',
+                        label=_('Publication Location'),                    
                         classes=['control-full']) 
                     }}
                 </div>
@@ -132,11 +149,19 @@
 
         <section id="book-section" class='pub-type-section'>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-8">
+                    {{ macro.input('book-publisher',
+                        id='book-publisher',
+                        type='text',
+                        label=_('Publisher'),                    
+                        classes=['control-full']) 
+                    }}
+                </div>
+                <div class="col-sm-4">
                     {{ macro.input('book-address',
                         id='book-address',
                         type='text',
-                        label=_('Address'),                    
+                        label=_('Location'),                    
                         classes=['control-full']) 
                     }}
                 </div>
@@ -145,52 +170,49 @@
 
         <section id="thesis-section" class='pub-type-section'>
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-3">
+                    {{ macro.select('thesis-type', 
+                        id='thesis-type', 
+                        label = "Thesis Type",                 
+                        options=thesis_types, selected='', classes=[], attrs={'class': 'thesis-type-select'}, is_required=false) 
+                    }}
+                </div> 
+                <div class="col-sm-9">
                     {{ macro.input('thesis-school',
                         id='thesis-school',
-                        type='text',
-                        label=_('School'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>                
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    {{ macro.input('thesis-address',
-                        id='thesis-address',
-                        type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-            </div>
-        </section>
-
-        <section id="section-tech-report" class='pub-type-section'>
-            <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.input('report-number',
-                        id='report-number',
-                        type='text',
-                        label=_('Report Number'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-                <div class="col-sm-8">
-                    {{ macro.input('report-ins',
-                        id='report-ins',
                         type='text',
                         label=_('Institution'),                    
                         classes=['control-full']) 
                     }}
                 </div>                
             </div>
+        </section>
+
+        <section id="section-tech-report" class='pub-type-section'>
+            <div class="row">
+                <div class="col-sm-6">
+                     {{ macro.input('report-publisher',
+                        id='report-publisher',
+                        type='text',
+                        label=_('Publisher'),                    
+                        classes=['control-full']) 
+                    }}
+                </div>
+                <div class="col-sm-6">
+                    {{ macro.input('report-ins',
+                        id='report-ins',
+                        type='text',
+                        label=_('Organization'),                    
+                        classes=['control-full']) 
+                    }}
+                </div>                
+            </div>
            <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     {{ macro.input('report-address',
                         id='report-address',
                         type='text',
-                        label=_('Address'),                    
+                        label=_('Location'),                    
                         classes=['control-full']) 
                     }}
                 </div>                

@@ -95,11 +95,13 @@ class LinkReferenceController():
         package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
         publication_types = Helper.get_publication_types_dropdown_content()
         years = Helper.get_years_list()
+        thesis_types = [{'value': 'PhD', 'text': 'PhD'}, {'value': 'Master', 'text': 'Master'}]
 
         return render_template('add_manually.html', 
             pkg_dict=package, 
             publication_types=publication_types,
             years=years,
+            thesis_types=thesis_types,
             )
     
 
