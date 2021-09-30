@@ -102,44 +102,37 @@ class Helper():
         reference['title'] = request.form.get('title')
         reference['author'] = Helper.format_authors(request.form.get('author'))
         reference['year'] = request.form.get('year')
-        reference['publisher'] = request.form.get('publisher')
+        reference['url'] = request.form.get('url')
 
-        if reference['ENTRYTYPE'] == 'article':
+        if reference['ENTRYTYPE'] == 'Journal Paper':
             reference['journal'] = request.form.get('journal')
             reference['volume'] = request.form.get('volume')
             reference['pages'] = request.form.get('page')
-            reference['month'] = request.form.get('month')
+            reference['issue'] = request.form.get('issue')
 
-        elif reference['ENTRYTYPE'] in ['conference', 'inproceedings', 'proceedings']:
-            reference['booktitle'] = request.form.get('booktitle')
+        elif reference['ENTRYTYPE'] == 'Conference Paper':
+            reference['proceeding'] = request.form.get('proceeding')
+            reference['proceeding_date'] = request.form.get('proceeding_date')
             reference['pages'] = request.form.get('pages')
             reference['address'] = request.form.get('address')
-            reference['series'] = request.form.get('series')
+            reference['publisher'] = request.form.get('publisher')
         
-        elif reference['ENTRYTYPE'] == 'techreport':
-            reference['number'] = request.form.get('number')
-            reference['institutaion'] = request.form.get('institutaion')
-            reference['address'] = request.form.get('address')
-            reference['month'] = request.form.get('month')
-        
-        elif reference['ENTRYTYPE'] == 'inbook':
-            reference['pages'] = request.form.get('pages')                
-            reference['address'] = request.form.get('address')
-
-        elif reference['ENTRYTYPE'] == 'book':                           
+        elif reference['ENTRYTYPE'] == 'Report':
+            reference['publisher'] = request.form.get('publisher')
+            reference['org'] = request.form.get('org')
             reference['address'] = request.form.get('address')
         
-        elif reference['ENTRYTYPE'] == 'incollection':
-            reference['booktitle'] = request.form.get('booktitle')
-            reference['pages'] = request.form.get('pages')
+        elif reference['ENTRYTYPE'] == 'Book':                           
             reference['address'] = request.form.get('address')
-            reference['editor'] = request.form.get('editor')
+            reference['publisher'] = request.form.get('publisher')
         
-        elif reference['ENTRYTYPE'] in ['masterthesis', 'phdthesis']:
+        elif reference['ENTRYTYPE'] == 'Thesis':
             reference['school'] = request.form.get('institutaion')
-            reference['address'] = request.form.get('address')
-            reference['month'] = request.form.get('month')
+            reference['thesis-type'] = request.form.get('thesis-type')
         
+        elif reference['ENTRYTYPE'] == 'Electronic Source':
+            reference['access'] = request.form.get('access')
+            
         else:
             reference['ENTRYTYPE'] = 'misc'
             reference['doi'] = ''
