@@ -22,7 +22,12 @@ class LinkReferenceController():
             try:
                 citation = Helper.process_doi_link(doi)
                 if citation:
-                    record = PackageReferenceLink(package_name=package['name'], doi=doi, create_at = _time.now(), citation=citation.get('cite'))
+                    reference_object = {}
+                    reference_object['package_name'] = package['name']
+                    reference_object['doi'] = doi
+                    reference_object['create_at'] = _time.now()
+                    reference_object['citation'] = citation.get('cite')
+                    record = PackageReferenceLink(reference_object)
                     record.save()
                 return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True))   
             except:
