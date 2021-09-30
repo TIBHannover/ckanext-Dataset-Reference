@@ -86,13 +86,6 @@
                         classes=['control-full']) 
                     }}
                 </div>
-                <div class="col-sm-3">
-                    {{ macro.select('article-month', 
-                        id='article-month', 
-                        label = "Month",                 
-                        options=months, classes=[], attrs={'class': 'month-select'}) 
-                    }}
-                </div>
             </div>
         </section>
 
@@ -218,13 +211,6 @@
 
         <section id="thesis-section" class='pub-type-section'>
             <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.select('thesis-month', 
-                        id='thesis-month', 
-                        label = "Month",                 
-                        options=months, classes=[], attrs={'class': 'month-select'}) 
-                    }}
-                </div>
                 <div class="col-sm-8">
                     {{ macro.input('thesis-school',
                         id='thesis-school',
@@ -266,13 +252,6 @@
                 </div>                
             </div>
            <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.select('report-month', 
-                        id='report-month', 
-                        label = "Month",                 
-                        options=months, classes=[], attrs={'class': 'month-select'}) 
-                    }}
-                </div>
                 <div class="col-sm-8">
                     {{ macro.input('report-address',
                         id='report-address',
