@@ -95,7 +95,7 @@ function send_data(is_cancel=false){
         formdata.set('journal', $('#article-journal').val());
         formdata.set('volume', $('#article-volume').val());
         formdata.set('page', $('#article-pages').val());
-        formdata.set('issue', $('#article-issue').select2('data').text);
+        formdata.set('issue', $('#article-issue').val());
         send_request(formdata);
 
     }

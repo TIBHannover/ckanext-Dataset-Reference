@@ -118,7 +118,8 @@ class LinkReferenceController():
                 reference = Helper.process_publication_manual_metadata(request)
                 citation = CitationFromatter.create_citation(reference)
                 if citation != "":
-                    record = PackageReferenceLink(package_name=package_name, doi='', create_at = _time.now(), citation=citation)
+                    reference_object = Helper.create_object_for_db(request, citation)
+                    record = PackageReferenceLink(reference_object)
                     record.save()                    
 
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)

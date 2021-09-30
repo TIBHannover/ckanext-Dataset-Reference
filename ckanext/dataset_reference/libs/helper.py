@@ -8,6 +8,7 @@ import bibtexparser
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
 from datetime import datetime
 from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
+from datetime import datetime as _time
 
 
 Base_doi_api_url = "http://dx.doi.org/"
@@ -97,6 +98,10 @@ class Helper():
 
         return None
 
+
+    '''
+        Process the manually added metadata to prepare it the for citation formatter
+    '''
     def process_publication_manual_metadata(request):
         reference = {}
         reference['ENTRYTYPE'] = request.form.get('type')
@@ -140,6 +145,37 @@ class Helper():
 
         return reference
 
+
+    '''
+        create the dictaionary of the reference metadata to save in db
+    '''
+    def create_object_for_db(request, citation):
+        reference = {}
+        reference['package_name'] = request.form.get('package')
+        reference['doi'] = ''
+        reference['create_at'] =  _time.now()
+        reference['citation'] = citation
+        reference['ref_type'] = request.form.get('type')
+        reference['title'] = request.form.get('title')
+        reference['authors'] = Helper.format_authors(request.form.get('author'))
+        reference['year'] = request.form.get('year')
+        reference['url'] = request.form.get('url')
+        reference['journal'] = request.form.get('journal')
+        reference['volume'] = request.form.get('volume')
+        reference['page'] = request.form.get('page')
+        reference['issue'] = request.form.get('issue')
+        reference['proceeding'] = request.form.get('proceeding')
+        reference['conference_date'] = request.form.get('proceeding_date')
+        reference['place'] = request.form.get('address')
+        reference['publisher'] = request.form.get('publisher')
+        reference['access_date'] = request.form.get('access')
+        reference['thesis_type'] = request.form.get('thesis-type')
+        if request.form.get('type') == 'Report':
+            reference['organization'] = request.form.get('org')
+        else:
+            reference['organization'] = request.form.get('school')
+            
+        return reference
 
 
     def format_authors(author_string):
