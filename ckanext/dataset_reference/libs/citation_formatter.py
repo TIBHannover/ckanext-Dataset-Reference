@@ -194,7 +194,7 @@ class CitationFromatter():
             if response.get('publisher'):
                 citation_text += ('[Online] ' + response.get('publisher') + '. ')
             if response.get('url'):
-                citation_text += ('Available at:  ' + response.get('url') + '  ')
+                citation_text += ('Available at:  <a href="' + response.get('url') + '" target="_blank">' + response.get('url') + '</a>  ')
             if response.get('access'):
                 citation_text += ('(accessed ' + response.get('access') + '). ')
 
