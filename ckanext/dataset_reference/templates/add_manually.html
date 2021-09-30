@@ -220,7 +220,17 @@
         </section>
 
         <section  id="section-electronic-source" class='pub-type-section'>
-        
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ macro.input('e-accessDate',
+                        id='e-accessDate',
+                        type='text',
+                        label=_('Access Date (DD.MM.YY)'),                    
+                        placeholder='Ex: 18.05.2019',
+                        classes=['control-full']) 
+                    }}
+                </div>
+            </div>
         </section>
 
         <div class="row">
