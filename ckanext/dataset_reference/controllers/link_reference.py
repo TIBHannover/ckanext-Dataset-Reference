@@ -40,7 +40,9 @@ class LinkReferenceController():
 
     def get_publication(name):        
         Helper.fill_null_citation(name)
-        res_object = PackageReferenceLink(package_name=name)
+        reference_object = {}
+        reference_object['package_name'] = name
+        res_object = PackageReferenceLink(reference_object)
         package = toolkit.get_action('package_show')({}, {'name_or_id': name})
         result = res_object.get_by_package(name=name)
         return_rows = ""
@@ -74,7 +76,7 @@ class LinkReferenceController():
     
 
     def delete_doi(doi_id):
-        res_object = PackageReferenceLink()
+        res_object = PackageReferenceLink({})
         doi_obj = res_object.get_by_id(id=doi_id)
         package_name = doi_obj.package_name
         package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})

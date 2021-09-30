@@ -32,16 +32,17 @@ package_reference_link_table = Table(
     Column(u"access_date", _types.UnicodeText),
     Column(u"organization", _types.UnicodeText),
     Column(u"thesis_type", _types.UnicodeText),
+    Column(u"conference_date", _types.UnicodeText),
     
 )
 
 
 class PackageReferenceLink(domain_object.DomainObject):
     def __init__(self, reference_object):
-        self.package_name = reference_object['package_name']
-        self.doi = reference_object['doi']        
-        self.create_at = reference_object['create_at']
-        self.citation = reference_object['citation']
+        self.package_name = reference_object.get('package_name')
+        self.doi = reference_object.get('doi')        
+        self.create_at = reference_object.get('create_at')
+        self.citation = reference_object.get('citation')
         self.authors = reference_object.get('authors')
         self.title = reference_object.get('title')
         self.year = reference_object.get('year')
@@ -57,6 +58,7 @@ class PackageReferenceLink(domain_object.DomainObject):
         self.access_date = reference_object.get('access_date')
         self.organization = reference_object.get('organization')
         self.thesis_type = reference_object.get('thesis_type')
+        self.conference_date = reference_object.get('conference_date')
 
     
     @classmethod

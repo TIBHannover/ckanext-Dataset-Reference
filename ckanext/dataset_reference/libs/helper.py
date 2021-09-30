@@ -161,17 +161,12 @@ class Helper():
     def get_publication_types_dropdown_content():
         publication_types = []
         Types = ['',
-            'article', 
-            'conference', 
-            'inproceedings', 
-            'proceedings', 
-            'inbook', 
-            'incollection', 
-            'book', 
-            'masterthesis', 
-            'phdthesis',
-            'techreport',
-            'Other'
+            'Book', 
+            'Journal Paper', 
+            'Conference Paper', 
+            'Thesis', 
+            'Electronic Source', 
+            'Reports'
             ]        
         for t in Types:
             temp = {}
