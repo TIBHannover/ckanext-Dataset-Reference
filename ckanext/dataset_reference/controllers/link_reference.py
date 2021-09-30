@@ -7,6 +7,7 @@ import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
 from datetime import datetime as _time
 from ckanext.dataset_reference.libs.helper import Helper
+from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
 
 
 class LinkReferenceController():
@@ -115,7 +116,7 @@ class LinkReferenceController():
             if package_name:                
                 Helper.check_access_edit_package(package['id'])
                 reference = Helper.process_publication_manual_metadata(request)
-                citation = Helper.create_citation(reference)
+                citation = CitationFromatter.create_citation(reference)
                 if citation != "":
                     record = PackageReferenceLink(package_name=package_name, doi='', create_at = _time.now(), citation=citation)
                     record.save()                    
