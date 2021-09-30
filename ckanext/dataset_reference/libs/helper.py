@@ -166,7 +166,7 @@ class Helper():
             'Conference Paper', 
             'Thesis', 
             'Electronic Source', 
-            'Reports'
+            'Report'
             ]        
         for t in Types:
             temp = {}
