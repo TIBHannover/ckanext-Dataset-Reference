@@ -17,14 +17,48 @@ package_reference_link_table = Table(
     Column(u"doi", _types.UnicodeText, nullable=False),    
     Column(u"create_at", _types.DateTime, default=datetime.datetime.utcnow, nullable=False),
     Column(u"citation", _types.UnicodeText),
+    Column(u"authors", _types.UnicodeText),
+    Column(u"title", _types.UnicodeText),
+    Column(u"year", _types.UnicodeText),
+    Column(u"url", _types.UnicodeText),
+    Column(u"ref_type", _types.UnicodeText),
+    Column(u"publisher", _types.UnicodeText),
+    Column(u"place", _types.UnicodeText),
+    Column(u"journal", _types.UnicodeText),
+    Column(u"volume", _types.UnicodeText),
+    Column(u"issue", _types.UnicodeText),
+    Column(u"page", _types.UnicodeText),
+    Column(u"proceeding", _types.UnicodeText),
+    Column(u"access_date", _types.UnicodeText),
+    Column(u"organization", _types.UnicodeText),
+    Column(u"thesis_type", _types.UnicodeText),
+    Column(u"conference_date", _types.UnicodeText),
+    
 )
 
+
 class PackageReferenceLink(domain_object.DomainObject):
-    def __init__(self, package_name=None, doi=None, create_at=None, citation=None):
-        self.package_name = package_name
-        self.doi = doi        
-        self.create_at = create_at
-        self.citation = citation
+    def __init__(self, reference_object):
+        self.package_name = reference_object.get('package_name')
+        self.doi = reference_object.get('doi')        
+        self.create_at = reference_object.get('create_at')
+        self.citation = reference_object.get('citation')
+        self.authors = reference_object.get('authors')
+        self.title = reference_object.get('title')
+        self.year = reference_object.get('year')
+        self.url = reference_object.get('url')
+        self.ref_type = reference_object.get('ref_type')
+        self.publisher = reference_object.get('publisher')
+        self.place = reference_object.get('place')
+        self.journal = reference_object.get('journal')
+        self.volume = reference_object.get('volume')
+        self.issue = reference_object.get('issue')
+        self.page = reference_object.get('page')
+        self.proceeding = reference_object.get('proceeding')
+        self.access_date = reference_object.get('access_date')
+        self.organization = reference_object.get('organization')
+        self.thesis_type = reference_object.get('thesis_type')
+        self.conference_date = reference_object.get('conference_date')
 
     
     @classmethod

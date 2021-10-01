@@ -7,6 +7,7 @@ import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
 from datetime import datetime as _time
 from ckanext.dataset_reference.libs.helper import Helper
+from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
 
 
 class LinkReferenceController():
@@ -22,7 +23,12 @@ class LinkReferenceController():
             try:
                 citation = Helper.process_doi_link(doi)
                 if citation:
-                    record = PackageReferenceLink(package_name=package['name'], doi=doi, create_at = _time.now(), citation=citation.get('cite'))
+                    reference_object = {}
+                    reference_object['package_name'] = package['name']
+                    reference_object['doi'] = doi
+                    reference_object['create_at'] = _time.now()
+                    reference_object['citation'] = citation.get('cite')
+                    record = PackageReferenceLink(reference_object)
                     record.save()
                 return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True))   
             except:
@@ -35,20 +41,24 @@ class LinkReferenceController():
 
     def get_publication(name):        
         Helper.fill_null_citation(name)
-        res_object = PackageReferenceLink(package_name=name)
+        reference_object = {}
+        reference_object['package_name'] = name
+        res_object = PackageReferenceLink(reference_object)
         package = toolkit.get_action('package_show')({}, {'name_or_id': name})
         result = res_object.get_by_package(name=name)
         return_rows = ""
-        if result == false:
+        if result == false: ## there is no reference for this dataset
             return '0'
         for source in result:
             if not source.citation:
                 continue
             meta_data = {}
             meta_data['cite'] = source.citation
-            if meta_data:
+            if source.doi != '':
                 meta_data['link'] = source.doi
-                return_rows += Helper.create_table_row(meta_data, source.id, Helper.check_access_edit_package(package['id']))
+            else:
+                meta_data['link'] = source.url
+            return_rows += Helper.create_table_row(meta_data, source.id, Helper.check_access_edit_package(package['id']))
         
         if return_rows != "":
             return return_rows
@@ -69,7 +79,7 @@ class LinkReferenceController():
     
 
     def delete_doi(doi_id):
-        res_object = PackageReferenceLink()
+        res_object = PackageReferenceLink({})
         doi_obj = res_object.get_by_id(id=doi_id)
         package_name = doi_obj.package_name
         package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
@@ -88,13 +98,13 @@ class LinkReferenceController():
         package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
         publication_types = Helper.get_publication_types_dropdown_content()
         years = Helper.get_years_list()
-        months = Helper.get_month_list()
+        thesis_types = [{'value': 'PhD', 'text': 'PhD'}, {'value': 'Master', 'text': 'Master'}]
 
         return render_template('add_manually.html', 
             pkg_dict=package, 
             publication_types=publication_types,
             years=years,
-            months=months
+            thesis_types=thesis_types,
             )
     
 
@@ -108,9 +118,10 @@ class LinkReferenceController():
             if package_name:                
                 Helper.check_access_edit_package(package['id'])
                 reference = Helper.process_publication_manual_metadata(request)
-                citation = Helper.create_citation(reference)
+                citation = CitationFromatter.create_citation(reference)
                 if citation != "":
-                    record = PackageReferenceLink(package_name=package_name, doi='', create_at = _time.now(), citation=citation)
+                    reference_object = Helper.create_object_for_db(request, citation)
+                    record = PackageReferenceLink(reference_object)
                     record.save()                    
 
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
