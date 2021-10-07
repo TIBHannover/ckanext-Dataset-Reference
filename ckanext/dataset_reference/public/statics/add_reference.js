@@ -41,7 +41,9 @@ $(document).ready(function(){
         $('#doi').addClass('link-enabled');
         $('#bibtex').removeClass('link-enabled');
         $('#bibtex').css("background-color", '#EBEBEB');
+        $('#bibtex').val('');
         $('#doi_or_bibtex').val('doi');
+        $('#bibtex_validation_message').text(''); 
     });
 
 
@@ -50,9 +52,17 @@ $(document).ready(function(){
         $('#bibtex').addClass('link-enabled');
         $('#doi').css("background-color", '#EBEBEB');
         $('#doi').removeClass('link-enabled');
+        $('#doi').val('');
         $('#doi_or_bibtex').val('bibtex');
+        $('#doi_validation_message').text('');   
     });
 
-    
+    $('#bibtex').keydown(function(){
+        $('#bibtex_validation_message').text('');   
+    });
+
+    $('#doi').keydown(function(){
+        $('#doi_validation_message').text('');   
+    });
    
 });
