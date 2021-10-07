@@ -38,10 +38,11 @@
             <a href="{{action2}}"><i class="fa fa-plus"></i>{{_('Add Manually')}}</a>
           </div>
           <input type="hidden" name="package_id" value={{pkg_dict.id}}>
+          <input type="hidden" name="doi_or_bibtex" id="doi_or_bibtex">
       </div>
       <div class="modal-footer">
       </form>
-        <button id="doi_submit_btn" class="btn btn-primary">{{_('Save')}}</button>
+        <button id="ref_submit_btn" class="btn btn-primary">{{_('Save')}}</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">{{_('Close')}}</button>
       </div>
     </div>
