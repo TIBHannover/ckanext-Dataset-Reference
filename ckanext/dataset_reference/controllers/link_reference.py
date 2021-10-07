@@ -13,30 +13,39 @@ from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
 class LinkReferenceController():
 
     def save_doi():
-        package_id = request.form.get('package_id')       
+        package_id = request.form.get('package_id') 
+        entry_type = request.form.get('doi_or_bibtex')     
         doi = request.form.get('doi')       
+        bibtex = request.form.get('bibtex')
         if not Helper.check_access_edit_package(package_id):
             toolkit.abort(403, 'You are not authorized to access this function')
+        
+        reference_object = {}
+        reference_object['create_at'] = _time.now()
 
-        if package_id and doi and Helper.check_doi_validity(doi) == True:
+        try:
             package = toolkit.get_action('package_show')({}, {'name_or_id': package_id})
-            try:
+            reference_object['package_name'] = package['name']
+
+             # set fields for a doi url/id
+            if entry_type == 'doi' and doi and Helper.check_doi_validity(doi) == True:
                 citation = Helper.process_doi_link(doi)
                 if citation:
-                    reference_object = {}
-                    reference_object['package_name'] = package['name']
                     reference_object['doi'] = doi
-                    reference_object['create_at'] = _time.now()
                     reference_object['citation'] = citation.get('cite')
-                    record = PackageReferenceLink(reference_object)
-                    record.save()
-                return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True))   
-            except:
-                return toolkit.abort(403, "bad request")
+                    
+            # set fields for a bibtex entry
+            if  entry_type == 'bibtex' and bibtex:
+                citation = ""
+                reference_object['doi'] = ""
+                reference_object['citation'] = ""
             
-        else:
+            record = PackageReferenceLink(reference_object)
+            record.save()
+            return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True))  
+
+        except:
             return toolkit.abort(403, "bad request")
-    
 
 
     def get_publication(name):        
