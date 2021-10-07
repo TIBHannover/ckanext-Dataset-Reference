@@ -70,7 +70,7 @@ class LinkReferenceController():
         doi_url = request.form.get('doi_url')
         response = Helper.check_doi_validity(doi_url)
         if not response:
-            return 'There is no information about this doi url'
+            return 'There is no information about this DOI URL or ID'
         
         elif response == 'url not vaid':
             return 'Please enter a valid doi url. Ex: https://www.doi.org/DOI_ID'
