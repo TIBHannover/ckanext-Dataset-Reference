@@ -64,5 +64,11 @@ $(document).ready(function(){
     $('#doi').keydown(function(){
         $('#doi_validation_message').text('');   
     });
-   
+
+    $('#ref_add_close_btn').click(function(){
+        $('#doi').val('');
+        $('#bibtex').val('');
+        $('#bibtex_validation_message').text('');  
+        $('#doi_validation_message').text(''); 
+    });
 });
