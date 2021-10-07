@@ -35,3 +35,20 @@ publication-add-manually-js:
   contents:
     - add_manually.js
 
+publication-add-reference-css:
+  output: ckanext-dataset-reference/%(version)s_my.css
+  contents:
+    - add_reference.css
+
+publication-add-reference-js:  
+  output: ckanext-dataset-reference/%(version)s_my.js
+  extra:
+    preload:
+      - base/main
+      - vendor/vendor
+      - vendor/bootstrap
+      - vendor/jquery
+      - vendor/jquery.ui.core
+      - vendor/select2
+  contents:
+    - add_reference.js
