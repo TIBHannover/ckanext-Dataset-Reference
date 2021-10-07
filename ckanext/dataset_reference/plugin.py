@@ -61,4 +61,11 @@ class DatasetReferencePlugin(plugins.SingletonPlugin):
             methods=['POST']
         )
 
+        blueprint.add_url_rule(
+            u'/dataset_reference/bibtex_is_valid',
+            u'bibtex_is_valid',
+            LinkReferenceController.bibtex_is_valid,
+            methods=['POST']
+        )
+
         return blueprint

@@ -8,6 +8,7 @@ from ckanext.dataset_reference.models.package_reference_link import PackageRefer
 from datetime import datetime as _time
 from ckanext.dataset_reference.libs.helper import Helper
 from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
+import bibtexparser
 
 
 class LinkReferenceController():
@@ -85,6 +86,16 @@ class LinkReferenceController():
         elif response == 'url not vaid':
             return 'Please enter a valid doi url. Ex: https://www.doi.org/DOI_ID'
         
+        return '1'
+    
+
+    def bibtex_is_valid():
+        bibtex = request.form.get('bibtex')
+        try:
+            parsed_bibtex_object = bibtexparser.loads(bibtex).entries[0]
+        except:
+            return "Please enter a valid BibTex format."
+
         return '1'
     
 

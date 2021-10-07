@@ -12,13 +12,27 @@ $(document).ready(function(){
                         $('#doi_validation_message').text(result);           
                     }
                     else{
-                        $('#doi-form').submit();
+                        $('#ref-form').submit();
                     }                        
                 }
             }); 
         }
         else{ // the entry is a bibtex
-            $('#doi-form').submit();
+            let bibtex_input = $('#bibtex').val();
+            $.ajax({
+                url: $('#bibtex-validity-url').val(),
+                cache:false,   
+                data: {'bibtex': bibtex_input},            
+                type: "POST",
+                success: function(result){
+                    if(result != '1'){                               
+                        $('#bibtex_validation_message').text(result);           
+                    }
+                    else{
+                        $('#ref-form').submit();
+                    }                        
+                }
+            }); 
         }    
     });
 

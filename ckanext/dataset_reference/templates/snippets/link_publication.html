@@ -6,6 +6,7 @@
 
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">{{_('Add Reference')}}</button>
 <input type="hidden" id="doi-validity-url" value={{h.url_for('dataset_reference.doi_is_valid', _external=True)}}>
+<input type="hidden" id="bibtex-validity-url" value={{h.url_for('dataset_reference.bibtex_is_valid', _external=True)}}>
 
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -19,7 +20,7 @@
           <p>{{_('You can add a reference via one of these ways: <br> 1- the DOI ID/URL <br> 2- Bibtex data <br> 3- Manually.')}}</p>
         </i></b>
         <br>
-        <form id="doi-form" class="" method="post" action='{{action}}' data-module="basic-form" enctype="multipart/form-data">      
+        <form id="ref-form" class="" method="post" action='{{action}}' data-module="basic-form" enctype="multipart/form-data">      
           <div id="doi_validation_message"></div>
           {{ macro.input('doi', 
               id='doi', 
@@ -27,6 +28,7 @@
               classes=['control-medium'] ,
               placeholder="https://doi.org/xxxxx")
           }}
+          <div id="bibtex_validation_message"></div>
           {{
             macro.markdown('bibtex', 
               id='bibtex', 
