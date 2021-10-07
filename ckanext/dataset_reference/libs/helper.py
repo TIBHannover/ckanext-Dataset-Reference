@@ -65,6 +65,12 @@ class Helper():
         except:
             return None
     
+    def process_bibtex(bibtex_string):
+        parsed_bibtex_object = bibtexparser.loads(bibtex_string).entries[0]
+        citation = None
+        if parsed_bibtex_object:
+            citation = CitationFromatter.create_citation(parsed_bibtex_object)
+        return citation
 
     '''
         fill null citations for a dataset

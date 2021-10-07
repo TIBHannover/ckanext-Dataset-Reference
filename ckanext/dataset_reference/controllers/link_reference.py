@@ -35,10 +35,11 @@ class LinkReferenceController():
                     reference_object['citation'] = citation.get('cite')
                     
             # set fields for a bibtex entry
-            if  entry_type == 'bibtex' and bibtex:
-                citation = ""
-                reference_object['doi'] = ""
-                reference_object['citation'] = ""
+            if  entry_type == 'bibtex' and bibtex:                
+                citation = Helper.process_bibtex(bibtex)
+                if citation:
+                    reference_object['doi'] = ""
+                    reference_object['citation'] = citation
             
             record = PackageReferenceLink(reference_object)
             record.save()
