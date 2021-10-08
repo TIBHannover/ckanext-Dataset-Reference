@@ -307,7 +307,10 @@ class Helper():
             row = row +  '<td>None</td>'
        
         if is_auth_to_delete:
-            row = row +  '<td>' +  Helper.create_delete_modal(object_id) + '</td>'  
+            row = row +  '<td>' +  Helper.create_delete_modal(object_id) + '<br>'  
+            if meta_data['adding_method'] == '3': # manually added
+                row = row +  '<a href="' + h.url_for('dataset_reference.edit_reference', package_name=str(meta_data['package']), ref_id=str(meta_data['id']))  + '"><i class="fa fa-edit"></i></a>'  
+        row = row +  '</td>'
         row = row +  '</tr>'
         return row
     

@@ -77,6 +77,9 @@ class LinkReferenceController():
                 continue
             meta_data = {}
             meta_data['cite'] = source.citation
+            meta_data['package'] = source.package_name
+            meta_data['id'] = source.id
+            meta_data['adding_method'] = source.adding_method
             if source.doi != '':
                 meta_data['link'] = source.doi
             else:
