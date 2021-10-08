@@ -13,6 +13,9 @@ import bibtexparser
 
 class LinkReferenceController():
 
+    '''
+        save the reference added via doi or bibtex
+    '''
     def save_doi():
         package_id = request.form.get('package_id') 
         entry_type = request.form.get('doi_or_bibtex')     
@@ -50,6 +53,9 @@ class LinkReferenceController():
             return toolkit.abort(403, "bad request")
 
 
+    '''
+        get the references for a dataset to show on the reference table
+    '''
     def get_publication(name):        
         Helper.fill_null_citation(name)
         reference_object = {}
@@ -77,6 +83,9 @@ class LinkReferenceController():
         return '0'
     
 
+    '''
+        check the doi url/id validity (exist or not)
+    '''
     def doi_is_valid():
         doi_url = request.form.get('doi_url')
         response = Helper.check_doi_validity(doi_url)
@@ -89,6 +98,9 @@ class LinkReferenceController():
         return '1'
     
 
+    '''
+        check the bibtex syntax validity
+    '''
     def bibtex_is_valid():
         bibtex = request.form.get('bibtex')
         try:
@@ -99,6 +111,9 @@ class LinkReferenceController():
         return '1'
     
 
+    '''
+        delete a reference
+    '''
     def delete_doi(doi_id):
         res_object = PackageReferenceLink({})
         doi_obj = res_object.get_by_id(id=doi_id)
@@ -115,6 +130,9 @@ class LinkReferenceController():
             return toolkit.abort(403, "bad request")
     
 
+    '''
+        render the add reference manually view
+    '''
     def add_publication_manually(package_name):
         package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
         publication_types = Helper.get_publication_types_dropdown_content()
@@ -128,7 +146,9 @@ class LinkReferenceController():
             thesis_types=thesis_types,
             )
     
-
+    '''
+        save the manually added reference
+    '''
     def save_publication_manually():
         try:
             package_name = request.form.get('package')
@@ -152,4 +172,14 @@ class LinkReferenceController():
             
         except:
             toolkit.abort(500, "We cannot process your request at this moment")
+    
+
+    '''
+        render the edit view for a manually added reference
+    '''
+    def edit_reference():
+
+
+
+        return '0'
 

@@ -15,6 +15,10 @@ Base_doi_api_url = "http://dx.doi.org/"
 
 class Helper():
 
+    '''
+        check the user can edit/add a reference or not. The user who can edit the target dataset, also 
+        can edit/add reference
+    '''
     def check_access_edit_package(package_id):
         context = {'user': toolkit.g.user, 'auth_user_obj': toolkit.g.userobj}
         data_dict = {'id':package_id}
@@ -27,6 +31,9 @@ class Helper():
             # toolkit.abort(403, 'You are not authorized to access this function')
 
 
+    '''
+        parse a doi input to get the doi ID
+    '''
     def parse_doi_id(url):
         if 'doi.org/' not in url:  # url has to be a doi ID
             return url  
@@ -36,6 +43,9 @@ class Helper():
         return doi_id
     
 
+    '''
+        call http://dx.doi.org/ to get the reference metadata
+    '''
     def call_api(api_url):
         response = None
         request_header = {'Accept': 'application/x-bibtex'}                
@@ -51,6 +61,9 @@ class Helper():
             return None
 
 
+    '''
+        parse the result returned by  http://dx.doi.org/
+    '''
     def process_doi_link(doi_link):               
         try:            
             doi_id = Helper.parse_doi_id(doi_link)
@@ -65,12 +78,17 @@ class Helper():
         except:
             return None
     
+
+    '''
+        parse a bibtex input
+    '''
     def process_bibtex(bibtex_string):
         parsed_bibtex_object = bibtexparser.loads(bibtex_string).entries[0]
         citation = None
         if parsed_bibtex_object:
             citation = CitationFromatter.create_citation(parsed_bibtex_object)
         return citation
+
 
     '''
         fill null citations for a dataset
@@ -92,7 +110,9 @@ class Helper():
         return True
 
 
-
+    '''
+        check a doi url is valid and exists
+    '''
     def check_doi_validity(doi_url):        
         doi = Helper.parse_doi_id(doi_url)
         if not doi:
@@ -184,6 +204,9 @@ class Helper():
         return reference
 
 
+    '''
+        format the authors list to replace ";" with "and"
+    '''
     def format_authors(author_string):
         if author_string:
             if author_string[len(author_string) - 1] == ';':
@@ -194,6 +217,9 @@ class Helper():
 
     
 
+    '''
+        prepare the reference types for manually adding
+    '''
     def get_publication_types_dropdown_content():
         publication_types = []
         Types = ['',
@@ -213,6 +239,9 @@ class Helper():
         return publication_types
 
     
+    '''
+        prepare the years list for manually adding
+    '''
     def get_years_list():
         years = []        
         current_year = datetime.now().year
@@ -224,6 +253,9 @@ class Helper():
         return years
 
     
+    '''
+        prepare the months list for manually adding
+    '''
     def get_month_list():
         months = []
         texts = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -237,6 +269,9 @@ class Helper():
         return months
 
 
+    '''
+        create the table view for references
+    '''
     def create_table_row(meta_data, object_id, is_auth_to_delete):
         row = '<tr>'
         row = row +  '<td>' +  meta_data['cite'] + '</td>'   
@@ -251,7 +286,9 @@ class Helper():
         return row
     
 
-
+    '''
+        create the modal view for deleteing a reference
+    '''
     def create_delete_modal(object_id):
         delete_url = h.url_for('dataset_reference.delete_doi', doi_id=str(object_id) ,  _external=True)
         modal = '<a href="#" type="button" data-toggle="modal" data-target="#deleteModal' + str(object_id) +  '"><i class="fa fa-trash-o"></i></a>'
