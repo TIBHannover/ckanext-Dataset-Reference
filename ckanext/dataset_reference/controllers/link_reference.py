@@ -151,7 +151,7 @@ class LinkReferenceController():
             years=years,
             thesis_types=thesis_types,
             edit_mode=False,
-            edit_object = None
+            edit_object = Helper.create_empty_ref_object()
             )
     
     '''

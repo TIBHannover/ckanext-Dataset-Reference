@@ -202,6 +202,32 @@ class Helper():
             reference['organization'] = request.form.get('school')
             
         return reference
+    
+
+    '''
+        create the dictaionary of an empty reference metadata 
+    '''
+    def create_empty_ref_object():
+        reference = {}
+        reference['doi'] = ''
+        reference['ref_type'] = ''
+        reference['title'] = ''
+        reference['authors'] = ''
+        reference['year'] = ''
+        reference['url'] = ''
+        reference['journal'] = ''
+        reference['volume'] = ''
+        reference['page'] = ''
+        reference['issue'] = ''
+        reference['proceeding'] = ''
+        reference['conference_date'] = ''
+        reference['place'] = ''
+        reference['publisher'] = ''
+        reference['access_date'] = ''
+        reference['thesis_type'] = ''
+        reference['organization'] = ''
+            
+        return reference
 
 
     '''

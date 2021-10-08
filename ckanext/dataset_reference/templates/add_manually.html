@@ -17,7 +17,7 @@
         {{ macro.select('pub-type', 
             id='pub-type', 
             label = "Reference Type",                 
-            options=publication_types, selected='', classes=[], attrs={'class': 'pub-type-select'}, is_required=true) 
+            options=publication_types, selected='{{edit_object["ref_type"]}}', classes=[], attrs={'class': 'pub-type-select'}, is_required=true) 
         }}
 
         {{ macro.input('title',
@@ -25,7 +25,8 @@
             type='text',
             label=_('Title'),                           
             classes=['control-full'],
-            is_required=true
+            is_required=true,
+            value=edit_object["title"]
             )             
         }}
 
@@ -35,7 +36,8 @@
             label=_('Author(s): <small>Please separate authors names with semicolon (;). (Example: FirstName1, LastName1;FirstName2, LastName2)</small>'),
             placeholder = "Example:  Author1;Author2;Author3",            
             classes=['control-full'],
-            is_required=true
+            is_required=true,
+            value=edit_object["authors"]
             ) 
         }}
 
@@ -44,7 +46,7 @@
                 {{ macro.select('year', 
                     id='years-select', 
                     label = "Year",                 
-                    options=years, classes=[], attrs={'class': 'years-select'}, is_required=true) 
+                    options=years, selected='{{edit_object["year"]}}', classes=[], attrs={'class': 'years-select'}, is_required=true) 
                 }}
             </div>
             <div class="col-sm-9">
@@ -52,7 +54,9 @@
                     id='ref-url',
                     type='text',
                     label=_('Reference URL / DOI'),                    
-                    classes=['control-full']) 
+                    classes=['control-full'],
+                    value=edit_object["url"]
+                    ) 
                 }}
             </div>
         </div>
@@ -64,7 +68,9 @@
                         id='article-journal',
                         type='text',
                         label=_('Journal Title'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["journal"] 
+                        )                        
                     }}
                 </div>
             </div>
@@ -74,7 +80,9 @@
                         id='article-volume',
                         type='text',
                         label=_('Volume'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["volume"]  
+                        )
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -82,7 +90,9 @@
                         id='article-issue',
                         type='text',
                         label=_('Issue Number'),                  
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["issue"]  
+                        )
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -91,7 +101,9 @@
                         type='text',
                         label=_('Pages'),
                         placeholder="Example: 23-35",                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["page"] 
+                        )
                     }}
                 </div>
             </div>
@@ -104,7 +116,9 @@
                         id='conf-proceeding',
                         type='text',
                         label=_('Proceeding Title'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["proceeding"]
+                        )  
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -113,7 +127,9 @@
                         type='text',
                         label=_('Proceeding location/date'),
                         placeholder='Ex: Germany, May 21-23, 2020',
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["conference_date"]
+                        )  
                     }}
                 </div>                
             </div>
@@ -123,7 +139,9 @@
                         id='conf-publisher',
                         type='text',
                         label=_('Publisher'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["publisher"]
+                        )  
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -131,7 +149,9 @@
                         id='conf-pub-address',
                         type='text',
                         label=_('Publication Location'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'], 
+                        value=edit_object["place"]
+                        )   
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -140,7 +160,9 @@
                         type='text',
                         label=_('Pages'),
                         placeholder="Example: 23-35",                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["page"]
+                        ) 
                     }}
                 </div>                
             </div>
@@ -154,7 +176,9 @@
                         id='book-publisher',
                         type='text',
                         label=_('Publisher'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["publisher"]
+                        ) 
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -162,7 +186,9 @@
                         id='book-address',
                         type='text',
                         label=_('Location'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["place"]
+                        )  
                     }}
                 </div>
             </div>
@@ -174,7 +200,7 @@
                     {{ macro.select('thesis-type', 
                         id='thesis-type', 
                         label = "Thesis Type",                 
-                        options=thesis_types, selected='', classes=[], attrs={'class': 'thesis-type-select'}, is_required=false) 
+                        options=thesis_types, selected='{{edit_object["thesis_type"]}}', classes=[], attrs={'class': 'thesis-type-select'}, is_required=false) 
                     }}
                 </div> 
                 <div class="col-sm-9">
@@ -182,7 +208,9 @@
                         id='thesis-school',
                         type='text',
                         label=_('Institution'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["organization"]
+                        )  
                     }}
                 </div>                
             </div>
@@ -195,7 +223,9 @@
                         id='report-publisher',
                         type='text',
                         label=_('Publisher'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["publisher"]
+                        )  
                     }}
                 </div>
                 <div class="col-sm-6">
@@ -203,7 +233,9 @@
                         id='report-ins',
                         type='text',
                         label=_('Organization'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["organization"]
+                        )   
                     }}
                 </div>                
             </div>
@@ -213,7 +245,9 @@
                         id='report-address',
                         type='text',
                         label=_('Location'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["place"]
+                        )   
                     }}
                 </div>                
             </div>
@@ -227,7 +261,9 @@
                         type='text',
                         label=_('Access Date (DD.MM.YY)'),                    
                         placeholder='Ex: 18.05.2019',
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["access_date"]
+                        )   
                     }}
                 </div>
             </div>
