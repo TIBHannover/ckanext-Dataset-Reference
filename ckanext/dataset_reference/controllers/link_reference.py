@@ -177,9 +177,25 @@ class LinkReferenceController():
     '''
         render the edit view for a manually added reference
     '''
-    def edit_reference():
+    def edit_reference(package_name, ref_id):
+        try:
+            package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+            if not Helper.check_access_edit_package(package['id']):
+                return toolkit.abort(403, 'You are not authorized to access this function')
+            reference_object = {}
+            reference_object['package_name'] = package_name
+            res_object = PackageReferenceLink(reference_object)
+            result = res_object.get_by_id(id=ref_id)
+            
+            
+            
+            
+            
+            
+            return result.citation
+
+        except:
+            return toolkit.abort(403, "bad request")
 
 
-
-        return '0'
 

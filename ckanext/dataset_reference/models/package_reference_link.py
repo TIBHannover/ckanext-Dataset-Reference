@@ -33,6 +33,7 @@ package_reference_link_table = Table(
     Column(u"organization", _types.UnicodeText),
     Column(u"thesis_type", _types.UnicodeText),
     Column(u"conference_date", _types.UnicodeText),
+     Column(u"adding_method", _types.UnicodeText),
     
 )
 
@@ -59,6 +60,7 @@ class PackageReferenceLink(domain_object.DomainObject):
         self.organization = reference_object.get('organization')
         self.thesis_type = reference_object.get('thesis_type')
         self.conference_date = reference_object.get('conference_date')
+        self.adding_method = reference_object.get('adding_method')
 
     
     @classmethod
