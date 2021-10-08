@@ -17,7 +17,7 @@
         {{ macro.select('pub-type', 
             id='pub-type', 
             label = "Reference Type",                 
-            options=publication_types, selected='{{edit_object["ref_type"]}}', classes=[], attrs={'class': 'pub-type-select'}, is_required=true) 
+            options=publication_types, selected=selected_ref_type, classes=[], attrs={'class': 'pub-type-select'}, is_required=true) 
         }}
 
         {{ macro.input('title',
@@ -46,7 +46,7 @@
                 {{ macro.select('year', 
                     id='years-select', 
                     label = "Year",                 
-                    options=years, selected='{{edit_object["year"]}}', classes=[], attrs={'class': 'years-select'}, is_required=true) 
+                    options=years, selected=selected_year, classes=[], attrs={'class': 'years-select'}, is_required=true) 
                 }}
             </div>
             <div class="col-sm-9">
@@ -200,7 +200,7 @@
                     {{ macro.select('thesis-type', 
                         id='thesis-type', 
                         label = "Thesis Type",                 
-                        options=thesis_types, selected='{{edit_object["thesis_type"]}}', classes=[], attrs={'class': 'thesis-type-select'}, is_required=false) 
+                        options=thesis_types, selected=selected_thesis, classes=[], attrs={'class': 'thesis-type-select'}, is_required=false) 
                     }}
                 </div> 
                 <div class="col-sm-9">

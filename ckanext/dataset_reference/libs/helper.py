@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from sqlalchemy.sql.expression import false, null
+from sqlalchemy.sql.functions import count
 import ckan.plugins.toolkit as toolkit
 import urllib.request
 import ckan.lib.helpers as h
@@ -231,6 +232,16 @@ class Helper():
 
 
     '''
+        find the selected item for the dit mode
+    '''
+    def find_selected(item, target):
+        for su in target:
+            if su['text'] == item:
+                return su['value']
+        return ''
+
+
+    '''
         format the authors list to replace ";" with "and"
     '''
     def format_authors(author_string):
@@ -248,19 +259,21 @@ class Helper():
     '''
     def get_publication_types_dropdown_content():
         publication_types = []
-        Types = ['',
+        Types = ['Not Selected',
             'Book', 
             'Journal Paper', 
             'Conference Paper', 
             'Thesis', 
             'Electronic Source', 
             'Report'
-            ]        
+            ]
+        counter = 0        
         for t in Types:
             temp = {}
-            temp['value'] = t
+            temp['value'] = str(counter)
             temp['text'] = t
             publication_types.append(temp)
+            counter += 1
 
         return publication_types
 
@@ -271,11 +284,13 @@ class Helper():
     def get_years_list():
         years = []        
         current_year = datetime.now().year
+        counter = 0
         for i in list(reversed(range(1900, current_year + 1))):
             temp = {}
-            temp['value'] = i
-            temp['text'] = i
+            temp['value'] = str(counter)
+            temp['text'] = str(i)
             years.append(temp)
+            counter += 1
         return years
 
     

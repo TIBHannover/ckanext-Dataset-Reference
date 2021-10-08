@@ -147,14 +147,17 @@ class LinkReferenceController():
         publication_types = Helper.get_publication_types_dropdown_content()
         years = Helper.get_years_list()
         thesis_types = [{'value': 'PhD', 'text': 'PhD'}, {'value': 'Master', 'text': 'Master'}]
-
+        
         return render_template('add_manually.html', 
             pkg_dict=package, 
             publication_types=publication_types,
             years=years,
             thesis_types=thesis_types,
-            edit_mode=False,
-            edit_object = Helper.create_empty_ref_object()
+            edit_mode="False",
+            edit_object = Helper.create_empty_ref_object(),
+            selected_ref_type = '',
+            selected_year = '',
+            selected_thesis = ''
             )
     
     '''
@@ -201,14 +204,20 @@ class LinkReferenceController():
             if result.adding_method == ADDING_METHOD_MANUAL: 
                 publication_types = Helper.get_publication_types_dropdown_content()
                 years = Helper.get_years_list()
-                thesis_types = [{'value': 'PhD', 'text': 'PhD'}, {'value': 'Master', 'text': 'Master'}]
+                thesis_types = [{'value': '0', 'text': 'PhD'}, {'value': '1', 'text': 'Master'}]
+                selected_ref_type = Helper.find_selected(result.ref_type, publication_types)
+                selected_year = Helper.find_selected(result.year, years)
+                selected_thesis = Helper.find_selected(result.thesis_type, thesis_types)
                 return render_template('add_manually.html', 
                     pkg_dict=package, 
                     publication_types=publication_types,
                     years=years,
                     thesis_types=thesis_types,
                     edit_mode=True,
-                    edit_object = result
+                    edit_object = result,
+                    selected_ref_type = selected_ref_type,
+                    selected_year = selected_year,
+                    selected_thesis = selected_thesis
                     )
                 
             return toolkit.abort(404, "Function is not available")
