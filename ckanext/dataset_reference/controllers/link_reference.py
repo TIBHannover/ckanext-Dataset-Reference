@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 from flask import redirect, request, render_template
-from sqlalchemy.sql.expression import false
+from sqlalchemy.sql.expression import false, true
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
@@ -9,6 +9,10 @@ from datetime import datetime as _time
 from ckanext.dataset_reference.libs.helper import Helper
 from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
 import bibtexparser
+
+ADDING_METHOD_DOI = '1'
+ADDING_METHOD_BIBTX = '2'
+ADDING_METHOD_MANUAL = '3'
 
 
 class LinkReferenceController():
@@ -36,6 +40,7 @@ class LinkReferenceController():
                 citation = Helper.process_doi_link(doi)
                 if citation:
                     reference_object['doi'] = doi
+                    reference_object['adding_method'] = ADDING_METHOD_DOI
                     reference_object['citation'] = citation.get('cite')
                     
             # set fields for a bibtex entry
@@ -43,6 +48,7 @@ class LinkReferenceController():
                 citation = Helper.process_bibtex(bibtex)
                 if citation:
                     reference_object['doi'] = ""
+                    reference_object['adding_method'] = ADDING_METHOD_BIBTX
                     reference_object['citation'] = citation
             
             record = PackageReferenceLink(reference_object)
@@ -144,6 +150,8 @@ class LinkReferenceController():
             publication_types=publication_types,
             years=years,
             thesis_types=thesis_types,
+            edit_mode=False,
+            edit_object = None
             )
     
     '''
@@ -162,6 +170,7 @@ class LinkReferenceController():
                 citation = CitationFromatter.create_citation(reference)
                 if citation != "":
                     reference_object = Helper.create_object_for_db(request, citation)
+                    reference_object['adding_method'] = ADDING_METHOD_MANUAL
                     record = PackageReferenceLink(reference_object)
                     record.save()                    
 
@@ -186,13 +195,20 @@ class LinkReferenceController():
             reference_object['package_name'] = package_name
             res_object = PackageReferenceLink(reference_object)
             result = res_object.get_by_id(id=ref_id)
-            
-            
-            
-            
-            
-            
-            return result.citation
+            if result.adding_method == ADDING_METHOD_MANUAL: 
+                publication_types = Helper.get_publication_types_dropdown_content()
+                years = Helper.get_years_list()
+                thesis_types = [{'value': 'PhD', 'text': 'PhD'}, {'value': 'Master', 'text': 'Master'}]
+                return render_template('add_manually.html', 
+                    pkg_dict=package, 
+                    publication_types=publication_types,
+                    years=years,
+                    thesis_types=thesis_types,
+                    edit_mode=True,
+                    edit_object = result
+                    )
+                
+            return toolkit.abort(404, "Function is not available")
 
         except:
             return toolkit.abort(403, "bad request")
