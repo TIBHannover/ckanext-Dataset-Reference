@@ -4,11 +4,16 @@
 
 {% block primary_content_inner %}
   {% asset 'ckanext-dataset-reference/publication-add-manually-css' %}
-  {% set action = h.url_for('dataset_reference.save_publication_manually', _external=True) %}
+  {% if edit_mode == "True": %}
+    {% set action = h.url_for('dataset_reference.save_edit_ref', _external=True) %}
+  {% else: %}
+    {% set action = h.url_for('dataset_reference.save_publication_manually', _external=True) %}
+  {% endif %}
   {% asset 'ckanext-dataset-reference/publication-add-manually-js' %}
   <input type="hidden" id="package" value={{pkg_dict.name}}>
   <input type="hidden" id="dest_url" value={{action}}>
-
+  <input type="hidden" id="ref_id" value={{edit_object["id"]}}>
+  
   <div class="row">
     <div class="col-sm-12">
         <h3>{{_('Please enter the data about your Reference.')}}</h3>

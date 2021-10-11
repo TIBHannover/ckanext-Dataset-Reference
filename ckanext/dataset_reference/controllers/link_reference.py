@@ -213,7 +213,7 @@ class LinkReferenceController():
                     publication_types=publication_types,
                     years=years,
                     thesis_types=thesis_types,
-                    edit_mode=True,
+                    edit_mode="True",
                     edit_object = result,
                     selected_ref_type = selected_ref_type,
                     selected_year = selected_year,
@@ -224,6 +224,34 @@ class LinkReferenceController():
 
         except:
             return toolkit.abort(403, "bad request")
+    
+
+    '''
+        Save the reference edit
+    '''
+    def save_edit_ref():
+        try:
+            package_name = request.form.get('package')
+            package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+            if request.form.get('cancel'):
+                return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
+                
+            if package_name:                
+                Helper.check_access_edit_package(package['id'])
+                reference = Helper.process_publication_manual_metadata(request)
+                citation = CitationFromatter.create_citation(reference)
+                if citation != "":
+                    record = PackageReferenceLink({}).get_by_id(id=request.form.get('ref_id'))
+                    record = Helper.update_ref_record(request, record, citation)
+                    record.commit()                    
+
+                return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
+
+            else:
+                toolkit.abort(403, "package not specefied")
+            
+        except:
+            toolkit.abort(500, "We cannot process your request at this moment")
 
 
 

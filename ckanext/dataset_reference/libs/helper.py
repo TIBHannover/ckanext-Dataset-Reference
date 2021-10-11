@@ -206,10 +206,132 @@ class Helper():
     
 
     '''
+        update an edited ref
+    '''
+    def update_ref_record(request, record, citation):
+        if request.form.get('type') == 'Journal Paper':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = request.form.get('journal')
+            record.volume = request.form.get('volume')
+            record.issue = request.form.get('issue')
+            record.page = request.form.get('page')
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = ''
+            record.publisher = ''
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = ''
+        
+        elif request.form.get('type') == 'Report':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = request.form.get('address')
+            record.publisher = request.form.get('publisher')
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = request.form.get('org')
+        
+        elif request.form.get('type') == 'Conference Paper':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page =  request.form.get('page')
+            record.proceeding = request.form.get('proceeding')
+            record.conference_date = request.form.get('proceeding_date')
+            record.place = request.form.get('address')
+            record.publisher = request.form.get('publisher')
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = ''
+        
+        elif request.form.get('type') == 'Book':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = request.form.get('address')
+            record.publisher = request.form.get('publisher')
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = ''
+        
+        elif request.form.get('type') == 'Thesis':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = ''
+            record.publisher = ''
+            record.access_date = ''
+            record.thesis_type = request.form.get('thesis-type')
+            record.organization = request.form.get('school')
+        
+        elif request.form.get('type') == 'Electronic Source':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = ''
+            record.publisher = ''
+            record.access_date = request.form.get('access')
+            record.thesis_type = ''
+            record.organization = ''
+
+        return record
+
+
+    '''
         create the dictaionary of an empty reference metadata 
     '''
     def create_empty_ref_object():
         reference = {}
+        reference['id'] = ''
         reference['doi'] = ''
         reference['ref_type'] = ''
         reference['title'] = ''

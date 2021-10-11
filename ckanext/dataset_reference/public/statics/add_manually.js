@@ -111,6 +111,7 @@ function send_data(is_cancel=false){
     formdata.set('author', $('#authors').val());
     formdata.set('year', $('#years-select').select2('data').text);
     formdata.set('url', $('#ref-url').val());
+    formdata.set('ref_id', $('#ref_id').val());
    
     if (pubType == 'Journal Paper'){
         formdata.set('journal', $('#article-journal').val());
