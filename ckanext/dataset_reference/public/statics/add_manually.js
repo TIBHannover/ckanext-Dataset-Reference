@@ -3,36 +3,12 @@ $(document).ready(function(){
     $('#years-select').select2();
     $('select.month-select').select2();
     $("#thesis-type").select2();
+    let pubType = $('#pub-type').select2('data').text;
+    setRefTypeSections(pubType);
 
     $('#pub-type').change(function(){
         let pubType = $(this).select2('data').text;
-        if (pubType == 'Journal Paper'){
-            $('.pub-type-section').hide();
-            $('#article-section').fadeIn();
-        }
-        else if (pubType == 'Report'){
-            $('.pub-type-section').hide();
-            $('#section-tech-report').fadeIn();
-        }
-        else if (pubType === 'Conference Paper'){
-            $('.pub-type-section').hide();
-            $('#conference-section').fadeIn();
-        }
-        else if (pubType == 'Book'){
-            $('.pub-type-section').hide();
-            $('#book-section').fadeIn();
-        }
-        else if (pubType === 'Thesis'){
-            $('.pub-type-section').hide();
-            $('#thesis-section').fadeIn();
-        }
-        else if (pubType === 'Electronic Source'){
-            $('.pub-type-section').hide();
-            $('#section-electronic-source').fadeIn();
-        }
-        else{
-            $('.pub-type-section').hide();            
-        }
+        setRefTypeSections(pubType);
 
     });
 
@@ -50,6 +26,46 @@ $(document).ready(function(){
 });
 
 
+/**
+ * show/hide ref sections based on select type value
+ * @param {*} pubType 
+ */
+
+function setRefTypeSections(pubType){
+    if (pubType == 'Journal Paper'){
+        $('.pub-type-section').hide();
+        $('#article-section').fadeIn();
+    }
+    else if (pubType == 'Report'){
+        $('.pub-type-section').hide();
+        $('#section-tech-report').fadeIn();
+    }
+    else if (pubType === 'Conference Paper'){
+        $('.pub-type-section').hide();
+        $('#conference-section').fadeIn();
+    }
+    else if (pubType == 'Book'){
+        $('.pub-type-section').hide();
+        $('#book-section').fadeIn();
+    }
+    else if (pubType === 'Thesis'){
+        $('.pub-type-section').hide();
+        $('#thesis-section').fadeIn();
+    }
+    else if (pubType === 'Electronic Source'){
+        $('.pub-type-section').hide();
+        $('#section-electronic-source').fadeIn();
+    }
+    else{
+        $('.pub-type-section').hide();            
+    }
+}
+
+
+/**
+ * validate the ref form before sending
+ * @returns 
+ */
 function form_validator(){
     let result = true;
     $('.pub-type-select').css('border', '');
@@ -75,6 +91,11 @@ function form_validator(){
 }
 
 
+/**
+ * create ref form and send it to the backend to save
+ * @param {*} is_cancel 
+ * @returns 
+ */
 function send_data(is_cancel=false){
     var formdata = new FormData();
     if (is_cancel){
@@ -90,6 +111,7 @@ function send_data(is_cancel=false){
     formdata.set('author', $('#authors').val());
     formdata.set('year', $('#years-select').select2('data').text);
     formdata.set('url', $('#ref-url').val());
+    formdata.set('ref_id', $('#ref_id').val());
    
     if (pubType == 'Journal Paper'){
         formdata.set('journal', $('#article-journal').val());
@@ -111,7 +133,7 @@ function send_data(is_cancel=false){
         formdata.set('proceeding_date', $('#conf-proceeding-date').val());
         formdata.set('publisher', $('#conf-publisher').val());
         formdata.set('address', $('#conf-pub-address').val());
-        formdata.set('pages', $('#conf-pages').val());
+        formdata.set('page', $('#conf-pages').val());
         send_request(formdata);
 
     }
@@ -137,6 +159,10 @@ function send_data(is_cancel=false){
     }
 }
 
+/**
+ * send xmlHttpRequest 
+ * @param {*} data 
+ */
 function send_request(data){
     let dest_url = $('#dest_url').val();
     let req = new XMLHttpRequest();

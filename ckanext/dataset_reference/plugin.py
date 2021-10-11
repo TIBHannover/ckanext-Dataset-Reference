@@ -68,4 +68,18 @@ class DatasetReferencePlugin(plugins.SingletonPlugin):
             methods=['POST']
         )
 
+        blueprint.add_url_rule(
+            u'/dataset_reference/edit_reference/<package_name>/<ref_id>',
+            u'edit_reference',
+            LinkReferenceController.edit_reference,
+            methods=['GET']
+        )
+
+        blueprint.add_url_rule(
+            u'/dataset_reference/save_edit_ref',
+            u'save_edit_ref',
+            LinkReferenceController.save_edit_ref,
+            methods=['POST']
+        )
+
         return blueprint

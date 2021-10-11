@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from sqlalchemy.sql.expression import false, null
+from sqlalchemy.sql.functions import count
 import ckan.plugins.toolkit as toolkit
 import urllib.request
 import ckan.lib.helpers as h
@@ -15,6 +16,10 @@ Base_doi_api_url = "http://dx.doi.org/"
 
 class Helper():
 
+    '''
+        check the user can edit/add a reference or not. The user who can edit the target dataset, also 
+        can edit/add reference
+    '''
     def check_access_edit_package(package_id):
         context = {'user': toolkit.g.user, 'auth_user_obj': toolkit.g.userobj}
         data_dict = {'id':package_id}
@@ -27,6 +32,9 @@ class Helper():
             # toolkit.abort(403, 'You are not authorized to access this function')
 
 
+    '''
+        parse a doi input to get the doi ID
+    '''
     def parse_doi_id(url):
         if 'doi.org/' not in url:  # url has to be a doi ID
             return url  
@@ -36,6 +44,9 @@ class Helper():
         return doi_id
     
 
+    '''
+        call http://dx.doi.org/ to get the reference metadata
+    '''
     def call_api(api_url):
         response = None
         request_header = {'Accept': 'application/x-bibtex'}                
@@ -51,6 +62,9 @@ class Helper():
             return None
 
 
+    '''
+        parse the result returned by  http://dx.doi.org/
+    '''
     def process_doi_link(doi_link):               
         try:            
             doi_id = Helper.parse_doi_id(doi_link)
@@ -65,12 +79,17 @@ class Helper():
         except:
             return None
     
+
+    '''
+        parse a bibtex input
+    '''
     def process_bibtex(bibtex_string):
         parsed_bibtex_object = bibtexparser.loads(bibtex_string).entries[0]
         citation = None
         if parsed_bibtex_object:
             citation = CitationFromatter.create_citation(parsed_bibtex_object)
         return citation
+
 
     '''
         fill null citations for a dataset
@@ -92,7 +111,9 @@ class Helper():
         return True
 
 
-
+    '''
+        check a doi url is valid and exists
+    '''
     def check_doi_validity(doi_url):        
         doi = Helper.parse_doi_id(doi_url)
         if not doi:
@@ -125,7 +146,7 @@ class Helper():
         elif reference['ENTRYTYPE'] == 'Conference Paper':
             reference['proceeding'] = request.form.get('proceeding')
             reference['proceeding_date'] = request.form.get('proceeding_date')
-            reference['pages'] = request.form.get('pages')
+            reference['pages'] = request.form.get('page')
             reference['address'] = request.form.get('address')
             reference['publisher'] = request.form.get('publisher')
         
@@ -182,8 +203,169 @@ class Helper():
             reference['organization'] = request.form.get('school')
             
         return reference
+    
+
+    '''
+        update an edited ref
+    '''
+    def update_ref_record(request, record, citation):
+        if request.form.get('type') == 'Journal Paper':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = request.form.get('journal')
+            record.volume = request.form.get('volume')
+            record.issue = request.form.get('issue')
+            record.page = request.form.get('page')
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = ''
+            record.publisher = ''
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = ''
+        
+        elif request.form.get('type') == 'Report':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = request.form.get('address')
+            record.publisher = request.form.get('publisher')
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = request.form.get('org')
+        
+        elif request.form.get('type') == 'Conference Paper':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page =  request.form.get('page')
+            record.proceeding = request.form.get('proceeding')
+            record.conference_date = request.form.get('proceeding_date')
+            record.place = request.form.get('address')
+            record.publisher = request.form.get('publisher')
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = ''
+        
+        elif request.form.get('type') == 'Book':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = request.form.get('address')
+            record.publisher = request.form.get('publisher')
+            record.access_date = ''
+            record.thesis_type = ''
+            record.organization = ''
+        
+        elif request.form.get('type') == 'Thesis':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = ''
+            record.publisher = ''
+            record.access_date = ''
+            record.thesis_type = request.form.get('thesis-type')
+            record.organization = request.form.get('school')
+        
+        elif request.form.get('type') == 'Electronic Source':
+            record.citation = citation
+            record.ref_type = request.form.get('type')
+            record.title = request.form.get('title')
+            record.authors = Helper.format_authors(request.form.get('author'))
+            record.year = request.form.get('year')
+            record.url =  request.form.get('url')
+            record.journal = ''
+            record.volume = ''
+            record.issue = ''
+            record.page = ''
+            record.proceeding = ''
+            record.conference_date = ''
+            record.place = ''
+            record.publisher = ''
+            record.access_date = request.form.get('access')
+            record.thesis_type = ''
+            record.organization = ''
+
+        return record
 
 
+    '''
+        create the dictaionary of an empty reference metadata 
+    '''
+    def create_empty_ref_object():
+        reference = {}
+        reference['id'] = ''
+        reference['doi'] = ''
+        reference['ref_type'] = ''
+        reference['title'] = ''
+        reference['authors'] = ''
+        reference['year'] = ''
+        reference['url'] = ''
+        reference['journal'] = ''
+        reference['volume'] = ''
+        reference['page'] = ''
+        reference['issue'] = ''
+        reference['proceeding'] = ''
+        reference['conference_date'] = ''
+        reference['place'] = ''
+        reference['publisher'] = ''
+        reference['access_date'] = ''
+        reference['thesis_type'] = ''
+        reference['organization'] = ''
+            
+        return reference
+
+
+    '''
+        find the selected item for the dit mode
+    '''
+    def find_selected(item, target):
+        for su in target:
+            if su['text'] == item:
+                return su['value']
+        return ''
+
+
+    '''
+        format the authors list to replace ";" with "and"
+    '''
     def format_authors(author_string):
         if author_string:
             if author_string[len(author_string) - 1] == ';':
@@ -194,36 +376,49 @@ class Helper():
 
     
 
+    '''
+        prepare the reference types for manually adding
+    '''
     def get_publication_types_dropdown_content():
         publication_types = []
-        Types = ['',
+        Types = ['Not Selected',
             'Book', 
             'Journal Paper', 
             'Conference Paper', 
             'Thesis', 
             'Electronic Source', 
             'Report'
-            ]        
+            ]
+        counter = 0        
         for t in Types:
             temp = {}
-            temp['value'] = t
+            temp['value'] = str(counter)
             temp['text'] = t
             publication_types.append(temp)
+            counter += 1
 
         return publication_types
 
     
+    '''
+        prepare the years list for manually adding
+    '''
     def get_years_list():
         years = []        
         current_year = datetime.now().year
+        counter = 0
         for i in list(reversed(range(1900, current_year + 1))):
             temp = {}
-            temp['value'] = i
-            temp['text'] = i
+            temp['value'] = str(counter)
+            temp['text'] = str(i)
             years.append(temp)
+            counter += 1
         return years
 
     
+    '''
+        prepare the months list for manually adding
+    '''
     def get_month_list():
         months = []
         texts = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -237,6 +432,9 @@ class Helper():
         return months
 
 
+    '''
+        create the table view for references
+    '''
     def create_table_row(meta_data, object_id, is_auth_to_delete):
         row = '<tr>'
         row = row +  '<td>' +  meta_data['cite'] + '</td>'   
@@ -246,12 +444,17 @@ class Helper():
             row = row +  '<td>None</td>'
        
         if is_auth_to_delete:
-            row = row +  '<td>' +  Helper.create_delete_modal(object_id) + '</td>'  
+            row = row +  '<td>' +  Helper.create_delete_modal(object_id) + '<br>'  
+            if meta_data['adding_method'] == '3': # manually added
+                row = row +  '<a href="' + h.url_for('dataset_reference.edit_reference', package_name=str(meta_data['package']), ref_id=str(meta_data['id']))  + '"><i class="fa fa-edit"></i></a>'  
+        row = row +  '</td>'
         row = row +  '</tr>'
         return row
     
 
-
+    '''
+        create the modal view for deleteing a reference
+    '''
     def create_delete_modal(object_id):
         delete_url = h.url_for('dataset_reference.delete_doi', doi_id=str(object_id) ,  _external=True)
         modal = '<a href="#" type="button" data-toggle="modal" data-target="#deleteModal' + str(object_id) +  '"><i class="fa fa-trash-o"></i></a>'
