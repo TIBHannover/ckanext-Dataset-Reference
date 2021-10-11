@@ -146,7 +146,7 @@ class Helper():
         elif reference['ENTRYTYPE'] == 'Conference Paper':
             reference['proceeding'] = request.form.get('proceeding')
             reference['proceeding_date'] = request.form.get('proceeding_date')
-            reference['pages'] = request.form.get('pages')
+            reference['pages'] = request.form.get('page')
             reference['address'] = request.form.get('address')
             reference['publisher'] = request.form.get('publisher')
         
