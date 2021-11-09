@@ -1,53 +1,25 @@
-"""
-Tests for plugin.py.
+# encoding: utf-8 
 
-Tests are written using the pytest library (https://docs.pytest.org), and you
-should read the testing guidelines in the CKAN docs:
-https://docs.ckan.org/en/2.9/contributing/testing.html
+'''
+    Test Class for the dataset_reference plugin
+'''
 
-To write tests for your extension you should install the pytest-ckan package:
+import pytest
 
-    pip install pytest-ckan
-
-This will allow you to use CKAN specific fixtures on your tests.
-
-For instance, if your test involves database access you can use `clean_db` to
-reset the database:
-
-    import pytest
-
-    from ckan.tests import factories
-
-    @pytest.mark.usefixtures("clean_db")
-    def test_some_action():
-
-        dataset = factories.Dataset()
-
-        # ...
-
-For functional tests that involve requests to the application, you can use the
-`app` fixture:
-
-    from ckan.plugins import toolkit
-
-    def test_some_endpoint(app):
-
-        url = toolkit.url_for('myblueprint.some_endpoint')
-
-        response = app.get(url)
-
-        assert response.status_code == 200
+import ckan.tests.factories as factories
+import ckan.lib.helpers as h
+import ckan.model as model
+import ckan.lib.create_test_data as ctd
 
 
-To temporary patch the CKAN configuration for the duration of a test you can use:
 
-    import pytest
+@pytest.mark.usefixtures('clean_db', 'with_plugins', 'with_request_context')
+class TestDatasetReference(object):
 
-    @pytest.mark.ckan_config("ckanext.myext.some_key", "some_value")
-    def test_some_action():
+
+
+
+    def test_add_reference_with_doi_when_doi_is_valid(self, app):
+        
+
         pass
-"""
-import ckanext.dataset_reference.plugin as plugin
-
-def test_plugin():
-    pass
