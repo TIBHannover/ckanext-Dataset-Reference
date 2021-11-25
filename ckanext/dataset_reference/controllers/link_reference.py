@@ -8,6 +8,7 @@ from ckanext.dataset_reference.models.package_reference_link import PackageRefer
 from datetime import datetime as _time
 from ckanext.dataset_reference.libs.helper import Helper
 from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
+from bibtexparser.bparser import BibTexParser
 import bibtexparser
 
 ADDING_METHOD_DOI = '1'
@@ -112,8 +113,9 @@ class LinkReferenceController():
     '''
     def bibtex_is_valid():
         bibtex = request.form.get('bibtex')
+        parser = BibTexParser(common_strings=True)
         try:
-            parsed_bibtex_object = bibtexparser.loads(bibtex).entries[0]
+            parsed_bibtex_object =  bibtexparser.loads(bibtex, parser).entries[0]
         except:
             return "Please enter a valid BibTex format."
 
