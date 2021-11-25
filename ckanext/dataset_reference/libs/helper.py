@@ -10,6 +10,7 @@ from ckanext.dataset_reference.models.package_reference_link import PackageRefer
 from datetime import datetime
 from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
 from datetime import datetime as _time
+from bibtexparser.bparser import BibTexParser
 
 
 Base_doi_api_url = "http://dx.doi.org/"
@@ -84,7 +85,8 @@ class Helper():
         parse a bibtex input
     '''
     def process_bibtex(bibtex_string):
-        parsed_bibtex_object = bibtexparser.loads(bibtex_string).entries[0]
+        parser = BibTexParser(common_strings=True)
+        parsed_bibtex_object =  bibtexparser.loads(bibtex_string, parser).entries[0]
         citation = None
         if parsed_bibtex_object:
             citation = CitationFromatter.create_citation(parsed_bibtex_object)
