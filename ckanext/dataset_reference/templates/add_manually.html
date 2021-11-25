@@ -42,7 +42,7 @@
             placeholder = "Example:  Author1;Author2;Author3",            
             classes=['control-full'],
             is_required=true,
-            value=edit_object["authors"]
+            value= h.format_authors_name_for_edit(edit_object["authors"])
             ) 
         }}
 

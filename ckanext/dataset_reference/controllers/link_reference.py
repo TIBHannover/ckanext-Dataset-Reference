@@ -254,6 +254,12 @@ class LinkReferenceController():
             
         except:
             toolkit.abort(500, "We cannot process your request at this moment")
+    
+
+    
+    def format_authors_name_for_edit(authors_string):
+        result = authors_string.replace(' and ', ';')
+        return result
 
 
 
