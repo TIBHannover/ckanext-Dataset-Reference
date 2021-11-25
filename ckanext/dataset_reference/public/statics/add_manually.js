@@ -18,7 +18,7 @@ $(document).ready(function(){
             $.ajax({
                 url: $('#author_validity_url').val(),
                 cache:false,   
-                data: {'authors_string': 'Test'},            
+                data: {'authors_string': $('#authors').val()},            
                 type: "POST",
                 success: function(result){
                     if(result !== '1'){

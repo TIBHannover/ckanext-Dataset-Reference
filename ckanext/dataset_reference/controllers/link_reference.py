@@ -2,6 +2,7 @@
 
 from flask import redirect, request, render_template
 from sqlalchemy.sql.expression import false, true
+from sqlalchemy.sql.operators import all_op
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
@@ -266,9 +267,12 @@ class LinkReferenceController():
     
     def check_authors_format():
         authors_string = request.form.get('authors_string')
-        if authors_string == 'Test':
-            return '2'
-
+        authors_string = authors_string.replace(';' , '')
+        authors_string = authors_string.replace(',' , '')
+        authors_string = authors_string.replace(' ' , '')
+        if not authors_string.isalpha():
+            return '0'
+            
         return '1'
 
 
