@@ -267,12 +267,18 @@ class LinkReferenceController():
     
     def check_authors_format():
         authors_string = request.form.get('authors_string')
-        authors_string = authors_string.replace(';' , '')
-        authors_string = authors_string.replace(',' , '')
-        authors_string = authors_string.replace(' ' , '')
-        if not authors_string.isalpha():
+        temp = authors_string.replace(';' , '')
+        temp = temp.replace(',' , '')
+        temp = temp.replace(' ' , '')
+        if not temp.isalpha():
             return '0'
-            
+        
+        temp = authors_string.split(';')
+        for au in temp:
+            name = au.split(',')
+            if len(name) != 2:
+                return '0'
+
         return '1'
 
 

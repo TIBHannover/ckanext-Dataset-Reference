@@ -34,6 +34,11 @@ $(document).ready(function(){
         }        
     });
 
+    $('#authors').keydown(function(){
+        $('#author-format-name-alert').hide();
+        $('#authors').css('border', ''); 
+    });
+
     $('#cancel-btn').click(function(){        
         send_data(true);        
     });
