@@ -15,7 +15,22 @@ $(document).ready(function(){
     $('#save-btn-add-manually').click(function(){        
         let form_validity = form_validator();        
         if(form_validity){
-            send_data();
+            $.ajax({
+                url: $('#author_validity_url').val(),
+                cache:false,   
+                data: {'authors_string': 'Test'},            
+                type: "POST",
+                success: function(result){
+                    if(result !== '1'){
+                        $('#authors').css('border', '2px solid red');                               
+                        $('#author-format-name-alert').show();           
+                    }
+                    else{
+                        send_data();
+                    }                        
+                }
+            }); 
+
         }        
     });
 

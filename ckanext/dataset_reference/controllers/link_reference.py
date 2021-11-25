@@ -264,11 +264,12 @@ class LinkReferenceController():
         return result
 
     
-    def check_authors_format(authors_string):
-        
+    def check_authors_format():
+        authors_string = request.form.get('authors_string')
+        if authors_string == 'Test':
+            return '2'
 
-
-        return '0'
+        return '1'
 
 
 
