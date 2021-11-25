@@ -83,6 +83,13 @@ class DatasetReferencePlugin(plugins.SingletonPlugin):
             methods=['POST']
         )
 
+        blueprint.add_url_rule(
+            u'/dataset_reference/check_authors_format/<authors_string>',
+            u'check_authors_format',
+            LinkReferenceController.check_authors_format,
+            methods=['GET']
+        )
+
         return blueprint
 
 

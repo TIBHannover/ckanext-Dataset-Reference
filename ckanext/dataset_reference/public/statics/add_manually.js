@@ -12,7 +12,7 @@ $(document).ready(function(){
 
     });
 
-    $('#save-btn').click(function(){        
+    $('#save-btn-add-manually').click(function(){        
         let form_validity = form_validator();        
         if(form_validity){
             send_data();

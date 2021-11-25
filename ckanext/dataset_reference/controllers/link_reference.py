@@ -256,10 +256,19 @@ class LinkReferenceController():
             toolkit.abort(500, "We cannot process your request at this moment")
     
 
-    
+    '''
+        replace and with ; for the edit mode for authors name field
+    '''
     def format_authors_name_for_edit(authors_string):
         result = authors_string.replace(' and ', ';')
         return result
+
+    
+    def check_authors_format(authors_string):
+        
+
+
+        return '0'
 
 
 

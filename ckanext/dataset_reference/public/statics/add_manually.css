@@ -14,3 +14,9 @@
 .pub-type-section{
     display: none;
 }
+
+#author-format-name-alert{
+    color: red;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
