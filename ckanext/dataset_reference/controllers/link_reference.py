@@ -2,6 +2,7 @@
 
 from flask import redirect, request, render_template
 from sqlalchemy.sql.expression import false, true
+from sqlalchemy.sql.operators import all_op
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
@@ -254,6 +255,31 @@ class LinkReferenceController():
             
         except:
             toolkit.abort(500, "We cannot process your request at this moment")
+    
+
+    '''
+        replace and with ; for the edit mode for authors name field
+    '''
+    def format_authors_name_for_edit(authors_string):
+        result = authors_string.replace(' and ', ';')
+        return result
+
+    
+    def check_authors_format():
+        authors_string = request.form.get('authors_string')
+        temp = authors_string.replace(';' , '')
+        temp = temp.replace(',' , '')
+        temp = temp.replace(' ' , '')
+        if not temp.isalpha():
+            return '0'
+        
+        temp = authors_string.split(';')
+        for au in temp:
+            name = au.split(',')
+            if len(name) != 2:
+                return '0'
+
+        return '1'
 
 
 

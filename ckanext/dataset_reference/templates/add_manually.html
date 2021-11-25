@@ -9,10 +9,13 @@
   {% else: %}
     {% set action = h.url_for('dataset_reference.save_publication_manually', _external=True) %}
   {% endif %}
+
+  {% set author_validity =  h.url_for('dataset_reference.check_authors_format', _external=True) %}
   {% asset 'ckanext-dataset-reference/publication-add-manually-js' %}
   <input type="hidden" id="package" value={{pkg_dict.name}}>
   <input type="hidden" id="dest_url" value={{action}}>
   <input type="hidden" id="ref_id" value={{edit_object["id"]}}>
+  <input type="hidden" id="author_validity_url" value='{{author_validity}}'>
   
   <div class="row">
     <div class="col-sm-12">
@@ -42,9 +45,10 @@
             placeholder = "Example:  Author1;Author2;Author3",            
             classes=['control-full'],
             is_required=true,
-            value=edit_object["authors"]
+            value= h.format_authors_name_for_edit(edit_object["authors"])
             ) 
         }}
+        <div id="author-format-name-alert">{{_('Invalid format')}}</div>
 
         <div class="row">
             <div class="col-sm-3">
@@ -277,7 +281,7 @@
         <div class="row">
             <div class="col-sm-12 form-actions">
                 <button class="btn btn-default" id="cancel-btn">{{_('Cancel')}}</button>
-                <button class="btn btn-primary" id="save-btn">{{_('Save')}}</button>
+                <button class="btn btn-primary" id="save-btn-add-manually">{{_('Save')}}</button>
             </div>
         </div>
 

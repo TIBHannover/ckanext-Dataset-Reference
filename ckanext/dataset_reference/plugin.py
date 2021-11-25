@@ -7,6 +7,7 @@ from ckanext.dataset_reference.controllers.link_reference import LinkReferenceCo
 class DatasetReferencePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.ITemplateHelpers)
     
 
     def update_config(self, config_):
@@ -82,4 +83,17 @@ class DatasetReferencePlugin(plugins.SingletonPlugin):
             methods=['POST']
         )
 
+        blueprint.add_url_rule(
+            u'/dataset_reference/check_authors_format',
+            u'check_authors_format',
+            LinkReferenceController.check_authors_format,
+            methods=['POST']
+        )
+
         return blueprint
+
+
+    #ITemplateHelpers
+
+    def get_helpers(self):
+        return {'format_authors_name_for_edit': LinkReferenceController.format_authors_name_for_edit}
