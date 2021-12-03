@@ -2,48 +2,41 @@ $(document).ready(function(){
     $("#pub-type").select2();
     $('#years-select').select2();
     $('select.month-select').select2();
+    $("#thesis-type").select2();
+    let pubType = $('#pub-type').select2('data').text;
+    setRefTypeSections(pubType);
 
     $('#pub-type').change(function(){
         let pubType = $(this).select2('data').text;
-        if (pubType == 'article'){
-            $('.pub-type-section').hide();
-            $('#article-section').fadeIn();
-        }
-        else if (pubType == 'techreport'){
-            $('.pub-type-section').hide();
-            $('#section-tech-report').fadeIn();
-        }
-        else if (['conference', 'inproceedings', 'proceedings'].includes(pubType)){
-            $('.pub-type-section').hide();
-            $('#conference-section').fadeIn();
-        }
-        else if (pubType == 'inbook'){
-            $('.pub-type-section').hide();
-            $('#inbook-section').fadeIn();
-        }
-        else if (pubType == 'incollection'){
-            $('.pub-type-section').hide();
-            $('#incollecion-section').fadeIn();
-        }
-        else if (pubType == 'book'){
-            $('.pub-type-section').hide();
-            $('#book-section').fadeIn();
-        }
-        else if (['masterthesis', 'phdthesis'].includes(pubType)){
-            $('.pub-type-section').hide();
-            $('#thesis-section').fadeIn();
-        }
-        else{
-            $('.pub-type-section').hide();            
-        }
+        setRefTypeSections(pubType);
 
     });
 
-    $('#save-btn').click(function(){        
+    $('#save-btn-add-manually').click(function(){        
         let form_validity = form_validator();        
         if(form_validity){
-            send_data();
+            $.ajax({
+                url: $('#author_validity_url').val(),
+                cache:false,   
+                data: {'authors_string': $('#authors').val()},            
+                type: "POST",
+                success: function(result){
+                    if(result !== '1'){
+                        $('#authors').css('border', '2px solid red');                               
+                        $('#author-format-name-alert').show();           
+                    }
+                    else{
+                        send_data();
+                    }                        
+                }
+            }); 
+
         }        
+    });
+
+    $('#authors').keydown(function(){
+        $('#author-format-name-alert').hide();
+        $('#authors').css('border', ''); 
     });
 
     $('#cancel-btn').click(function(){        
@@ -53,6 +46,46 @@ $(document).ready(function(){
 });
 
 
+/**
+ * show/hide ref sections based on select type value
+ * @param {*} pubType 
+ */
+
+function setRefTypeSections(pubType){
+    if (pubType == 'Journal Paper'){
+        $('.pub-type-section').hide();
+        $('#article-section').fadeIn();
+    }
+    else if (pubType == 'Report'){
+        $('.pub-type-section').hide();
+        $('#section-tech-report').fadeIn();
+    }
+    else if (pubType === 'Conference Paper'){
+        $('.pub-type-section').hide();
+        $('#conference-section').fadeIn();
+    }
+    else if (pubType == 'Book'){
+        $('.pub-type-section').hide();
+        $('#book-section').fadeIn();
+    }
+    else if (pubType === 'Thesis'){
+        $('.pub-type-section').hide();
+        $('#thesis-section').fadeIn();
+    }
+    else if (pubType === 'Electronic Source'){
+        $('.pub-type-section').hide();
+        $('#section-electronic-source').fadeIn();
+    }
+    else{
+        $('.pub-type-section').hide();            
+    }
+}
+
+
+/**
+ * validate the ref form before sending
+ * @returns 
+ */
 function form_validator(){
     let result = true;
     $('.pub-type-select').css('border', '');
@@ -78,6 +111,11 @@ function form_validator(){
 }
 
 
+/**
+ * create ref form and send it to the backend to save
+ * @param {*} is_cancel 
+ * @returns 
+ */
 function send_data(is_cancel=false){
     var formdata = new FormData();
     if (is_cancel){
@@ -92,55 +130,47 @@ function send_data(is_cancel=false){
     formdata.set('title', $('#pub-title').val()); 
     formdata.set('author', $('#authors').val());
     formdata.set('year', $('#years-select').select2('data').text);
-    formdata.set('publisher', $('#publisher').val());
+    formdata.set('url', $('#ref-url').val());
+    formdata.set('ref_id', $('#ref_id').val());
    
-    if (pubType == 'article'){
+    if (pubType == 'Journal Paper'){
         formdata.set('journal', $('#article-journal').val());
         formdata.set('volume', $('#article-volume').val());
         formdata.set('page', $('#article-pages').val());
-        formdata.set('month', $('#article-month').select2('data').text);
+        formdata.set('issue', $('#article-issue').val());
         send_request(formdata);
 
     }
-    else if (pubType == 'techreport'){
-        formdata.set('number', $('#report-number').val());
-        formdata.set('institutaion', $('#report-number').val());
-        formdata.set('month', $('#report-month').select2('data').text);
+    else if (pubType == 'Report'){
+        formdata.set('publisher', $('#report-publisher').val());
+        formdata.set('org', $('#report-ins').val());
         formdata.set('address', $('#report-address').val());
         send_request(formdata);
 
     }
-    else if (['conference', 'inproceedings', 'proceedings'].includes(pubType)){
-        formdata.set('booktitle', $('#conf-booktitle').val());
-        formdata.set('series', $('#conf-series').val());
-        formdata.set('address', $('#conf-address').val());
-        formdata.set('pages', $('#conf-pages').val());
+    else if (pubType === 'Conference Paper'){
+        formdata.set('proceeding', $('#conf-proceeding').val());
+        formdata.set('proceeding_date', $('#conf-proceeding-date').val());
+        formdata.set('publisher', $('#conf-publisher').val());
+        formdata.set('address', $('#conf-pub-address').val());
+        formdata.set('page', $('#conf-pages').val());
         send_request(formdata);
 
     }
-    else if (pubType == 'inbook'){
-        formdata.set('address', $('#inbook-address').val());
-        formdata.set('pages', $('#inbook-pages').val());
-        send_request(formdata);
-
-    }
-    else if (pubType == 'incollection'){
-        formdata.set('editor', $('#incollecion-editor').val());
-        formdata.set('address', $('#incollecion-address').val());
-        formdata.set('pages', $('#incollecion-pages').val());
-        formdata.set('booktitle', $('#incollecion-booktite').val());
-        send_request(formdata);
-
-    }
-    else if (pubType == 'book'){
+    else if (pubType == 'Book'){
         formdata.set('address', $('#book-address').val());
+        formdata.set('publisher', $('#book-publisher').val());
         send_request(formdata);
 
     }
-    else if (['masterthesis', 'phdthesis'].includes(pubType)){
-        formdata.set('address', $('#thesis-address').val());
-        formdata.set('month', $('#thesis-month').select2('data').text);
+    else if (pubType == 'Thesis'){
+        formdata.set('thesis-type', $('#thesis-type').select2('data').text);
         formdata.set('school', $('#thesis-school').val());
+        send_request(formdata);
+
+    }
+    else if (pubType == 'Electronic Source'){
+        formdata.set('access', $('#e-accessDate').val());
         send_request(formdata);
 
     }
@@ -149,6 +179,10 @@ function send_data(is_cancel=false){
     }
 }
 
+/**
+ * send xmlHttpRequest 
+ * @param {*} data 
+ */
 function send_request(data){
     let dest_url = $('#dest_url').val();
     let req = new XMLHttpRequest();

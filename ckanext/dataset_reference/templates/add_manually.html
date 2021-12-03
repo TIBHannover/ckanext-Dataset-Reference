@@ -4,11 +4,19 @@
 
 {% block primary_content_inner %}
   {% asset 'ckanext-dataset-reference/publication-add-manually-css' %}
-  {% set action = h.url_for('dataset_reference.save_publication_manually', _external=True) %}
+  {% if edit_mode == "True": %}
+    {% set action = h.url_for('dataset_reference.save_edit_ref', _external=True) %}
+  {% else: %}
+    {% set action = h.url_for('dataset_reference.save_publication_manually', _external=True) %}
+  {% endif %}
+
+  {% set author_validity =  h.url_for('dataset_reference.check_authors_format', _external=True) %}
   {% asset 'ckanext-dataset-reference/publication-add-manually-js' %}
   <input type="hidden" id="package" value={{pkg_dict.name}}>
   <input type="hidden" id="dest_url" value={{action}}>
-
+  <input type="hidden" id="ref_id" value={{edit_object["id"]}}>
+  <input type="hidden" id="author_validity_url" value='{{author_validity}}'>
+  
   <div class="row">
     <div class="col-sm-12">
         <h3>{{_('Please enter the data about your Reference.')}}</h3>
@@ -17,7 +25,7 @@
         {{ macro.select('pub-type', 
             id='pub-type', 
             label = "Reference Type",                 
-            options=publication_types, selected='', classes=[], attrs={'class': 'pub-type-select'}, is_required=true) 
+            options=publication_types, selected=selected_ref_type, classes=[], attrs={'class': 'pub-type-select'}, is_required=true) 
         }}
 
         {{ macro.input('title',
@@ -25,34 +33,39 @@
             type='text',
             label=_('Title'),                           
             classes=['control-full'],
-            is_required=true
+            is_required=true,
+            value=edit_object["title"]
             )             
         }}
 
         {{ macro.input('author',
             id='authors',
             type='text',
-            label=_('Author(s): Please separate authors names with semicolon (;) '),
+            label=_('Author(s): <small>Please separate authors names with semicolon (;). (Example: FirstName1, LastName1;FirstName2, LastName2)</small>'),
             placeholder = "Example:  Author1;Author2;Author3",            
             classes=['control-full'],
-            is_required=true
+            is_required=true,
+            value= h.format_authors_name_for_edit(edit_object["authors"])
             ) 
         }}
+        <div id="author-format-name-alert">{{_('Invalid format')}}</div>
 
         <div class="row">
             <div class="col-sm-3">
                 {{ macro.select('year', 
                     id='years-select', 
                     label = "Year",                 
-                    options=years, classes=[], attrs={'class': 'years-select'}, is_required=true) 
+                    options=years, selected=selected_year, classes=[], attrs={'class': 'years-select'}, is_required=true) 
                 }}
             </div>
             <div class="col-sm-9">
-                {{ macro.input('publisher',
-                    id='publisher',
+                {{ macro.input('url',
+                    id='ref-url',
                     type='text',
-                    label=_('Publisher'),                    
-                    classes=['control-full']) 
+                    label=_('Reference URL / DOI'),                    
+                    classes=['control-full'],
+                    value=edit_object["url"]
+                    ) 
                 }}
             </div>
         </div>
@@ -63,8 +76,10 @@
                     {{ macro.input('article-journal',
                         id='article-journal',
                         type='text',
-                        label=_('Journal'),                    
-                        classes=['control-full']) 
+                        label=_('Journal Title'),                    
+                        classes=['control-full'],
+                        value=edit_object["journal"] 
+                        )                        
                     }}
                 </div>
             </div>
@@ -74,7 +89,19 @@
                         id='article-volume',
                         type='text',
                         label=_('Volume'),                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["volume"]  
+                        )
+                    }}
+                </div>
+                <div class="col-sm-4">
+                    {{ macro.input('article-issue',
+                        id='article-issue',
+                        type='text',
+                        label=_('Issue Number'),                  
+                        classes=['control-full'],
+                        value=edit_object["issue"]  
+                        )
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -83,14 +110,9 @@
                         type='text',
                         label=_('Pages'),
                         placeholder="Example: 23-35",                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-                <div class="col-sm-3">
-                    {{ macro.select('article-month', 
-                        id='article-month', 
-                        label = "Month",                 
-                        options=months, classes=[], attrs={'class': 'month-select'}) 
+                        classes=['control-full'],
+                        value=edit_object["page"] 
+                        )
                     }}
                 </div>
             </div>
@@ -98,30 +120,47 @@
 
         <section id='conference-section' class='pub-type-section'>
             <div class='row'>
-                <div class="col-sm-6">
-                    {{ macro.input('conf-booktitle',
-                        id='conf-booktitle',
+                <div class="col-sm-8">
+                    {{ macro.input('conf-proceeding',
+                        id='conf-proceeding',
                         type='text',
-                        label=_('Book Title'),                    
-                        classes=['control-full']) 
+                        label=_('Proceeding Title'),                    
+                        classes=['control-full'],
+                        value=edit_object["proceeding"]
+                        )  
                     }}
                 </div>
-                <div class="col-sm-6">
-                    {{ macro.input('conf-series',
-                        id='conf-series',
+                <div class="col-sm-4">
+                    {{ macro.input('conf-proceeding-date',
+                        id='conf-proceeding-date',
                         type='text',
-                        label=_('Series'),
-                        classes=['control-full']) 
+                        label=_('Proceeding location/date'),
+                        placeholder='Ex: Germany, May 21-23, 2020',
+                        classes=['control-full'],
+                        value=edit_object["conference_date"]
+                        )  
                     }}
                 </div>                
             </div>
             <div class='row'>
-                <div class="col-sm-8">
-                    {{ macro.input('conf-address',
-                        id='conf-address',
+                <div class="col-sm-4">
+                    {{ macro.input('conf-publisher',
+                        id='conf-publisher',
                         type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
+                        label=_('Publisher'),                    
+                        classes=['control-full'],
+                        value=edit_object["publisher"]
+                        )  
+                    }}
+                </div>
+                <div class="col-sm-4">
+                    {{ macro.input('conf-pub-address',
+                        id='conf-pub-address',
+                        type='text',
+                        label=_('Publication Location'),                    
+                        classes=['control-full'], 
+                        value=edit_object["place"]
+                        )   
                     }}
                 </div>
                 <div class="col-sm-4">
@@ -130,87 +169,35 @@
                         type='text',
                         label=_('Pages'),
                         placeholder="Example: 23-35",                    
-                        classes=['control-full']) 
+                        classes=['control-full'],
+                        value=edit_object["page"]
+                        ) 
                     }}
                 </div>                
             </div>
         
         </section>
 
-        <section id="inbook-section" class='pub-type-section'>
-            <div class="row">
-                <div class="col-sm-3">
-                    {{ macro.input('inbook-pages',
-                        id='inbook-pages',
-                        type='text',
-                        label=_('Pages'),
-                        placeholder="Example: 23-35",                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-                <div class="col-sm-9">
-                    {{ macro.input('inbook-address',
-                        id='inbook-address',
-                        type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-            </div>
-        </section>
-
-        <section id="incollecion-section" class='pub-type-section'>
-            <div class="row">
-                <div class=col-sm-12>
-                    {{ macro.input('incollecion-editor',
-                        id='incollecion-editor',
-                        type='text',
-                        label=_('Editor(s): Please separate editors names with semicolon (;) '),
-                        placeholder = "Example:  Editor1;Editor2;Editor3",            
-                        classes=['control-full']) 
-                    }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.input('incollecion-pages',
-                        id='incollecion-pages',
-                        type='text',
-                        label=_('Pages'),
-                        placeholder="Example: 23-35",                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-                <div class="col-sm-8">
-                    {{ macro.input('incollecion-booktite',
-                        id='incollecion-booktite',
-                        type='text',
-                        label=_('Book Title'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>                
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    {{ macro.input('incollecion-address',
-                        id='incollecion-address',
-                        type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>
-            </div>
-
-        </section>
-
         <section id="book-section" class='pub-type-section'>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-8">
+                    {{ macro.input('book-publisher',
+                        id='book-publisher',
+                        type='text',
+                        label=_('Publisher'),                    
+                        classes=['control-full'],
+                        value=edit_object["publisher"]
+                        ) 
+                    }}
+                </div>
+                <div class="col-sm-4">
                     {{ macro.input('book-address',
                         id='book-address',
                         type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
+                        label=_('Location'),                    
+                        classes=['control-full'],
+                        value=edit_object["place"]
+                        )  
                     }}
                 </div>
             </div>
@@ -218,76 +205,83 @@
 
         <section id="thesis-section" class='pub-type-section'>
             <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.select('thesis-month', 
-                        id='thesis-month', 
-                        label = "Month",                 
-                        options=months, classes=[], attrs={'class': 'month-select'}) 
+                <div class="col-sm-3">
+                    {{ macro.select('thesis-type', 
+                        id='thesis-type', 
+                        label = "Thesis Type",                 
+                        options=thesis_types, selected=selected_thesis, classes=[], attrs={'class': 'thesis-type-select'}, is_required=false) 
                     }}
-                </div>
-                <div class="col-sm-8">
+                </div> 
+                <div class="col-sm-9">
                     {{ macro.input('thesis-school',
                         id='thesis-school',
                         type='text',
-                        label=_('School'),                    
-                        classes=['control-full']) 
+                        label=_('Institution'),                    
+                        classes=['control-full'],
+                        value=edit_object["organization"]
+                        )  
                     }}
                 </div>                
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    {{ macro.input('thesis-address',
-                        id='thesis-address',
-                        type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
-                    }}
-                </div>
             </div>
         </section>
 
         <section id="section-tech-report" class='pub-type-section'>
             <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.input('report-number',
-                        id='report-number',
+                <div class="col-sm-6">
+                     {{ macro.input('report-publisher',
+                        id='report-publisher',
                         type='text',
-                        label=_('Report Number'),                    
-                        classes=['control-full']) 
+                        label=_('Publisher'),                    
+                        classes=['control-full'],
+                        value=edit_object["publisher"]
+                        )  
                     }}
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     {{ macro.input('report-ins',
                         id='report-ins',
                         type='text',
-                        label=_('Institution'),                    
-                        classes=['control-full']) 
+                        label=_('Organization'),                    
+                        classes=['control-full'],
+                        value=edit_object["organization"]
+                        )   
                     }}
                 </div>                
             </div>
            <div class="row">
-                <div class="col-sm-4">
-                    {{ macro.select('report-month', 
-                        id='report-month', 
-                        label = "Month",                 
-                        options=months, classes=[], attrs={'class': 'month-select'}) 
-                    }}
-                </div>
-                <div class="col-sm-8">
+                <div class="col-sm-6">
                     {{ macro.input('report-address',
                         id='report-address',
                         type='text',
-                        label=_('Address'),                    
-                        classes=['control-full']) 
+                        label=_('Location'),                    
+                        classes=['control-full'],
+                        value=edit_object["place"]
+                        )   
                     }}
                 </div>                
+            </div>
+        </section>
+
+        <section  id="section-electronic-source" class='pub-type-section'>
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ macro.input('e-accessDate',
+                        id='e-accessDate',
+                        type='text',
+                        label=_('Access Date (DD.MM.YY)'),                    
+                        placeholder='Ex: 18.05.2019',
+                        classes=['control-full'],
+                        value=edit_object["access_date"]
+                        )   
+                    }}
+                </div>
             </div>
         </section>
 
         <div class="row">
             <div class="col-sm-12 form-actions">
                 <button class="btn btn-default" id="cancel-btn">{{_('Cancel')}}</button>
-                <button class="btn btn-primary" id="save-btn">{{_('Save')}}</button>
+                <button class="btn btn-primary" id="save-btn-add-manually">{{_('Save')}}</button>
             </div>
         </div>
 
