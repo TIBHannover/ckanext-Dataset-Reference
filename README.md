@@ -26,9 +26,10 @@ To install ckanext-Dataset-Reference:
 
 1. Activate your CKAN virtual environment, for example:
 
-        source /usr/lib/ckan/default/bin/activate
+       > source /usr/lib/ckan/default/bin/activate
+       > pip install ckanext-Dataset-Reference
 
-2. Clone the source and install it on the virtualenv (Suggested location: /usr/lib/ckan/default/src)
+OR, Clone the source and install it on the virtualenv (Suggested location: /usr/lib/ckan/default/src)
 :
 
         git clone https://github.com/TIBHannover/ckanext-Dataset-Reference.git
@@ -36,11 +37,11 @@ To install ckanext-Dataset-Reference:
         pip install -e .
         pip install -r requirements.txt
 
-3. Add `dataset_reference` to the `ckan.plugins` setting in your CKAN
+2. Add `dataset_reference` to the `ckan.plugins` setting in your CKAN
    config file (by default the config file is located at
    `/etc/ckan/default/ckan.ini`).
 
-4. Upgrade the CKAN database to add the plugin table:
+3. Upgrade the CKAN database to add the plugin table:
 
         ckan -c /etc/ckan/default/ckan.ini db upgrade -p dataset_reference
 
