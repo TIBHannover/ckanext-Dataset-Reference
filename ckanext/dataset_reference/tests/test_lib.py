@@ -35,6 +35,26 @@ class TestLibraryFunctions(object):
         assert Helper.parse_doi_id(input3) == '10.1007/978-3-030-57717-9_36'
     
 
+    def test_call_api(self):
+        '''
+            test the calling of doi.org api for fetching a reference metadata based on doi id.
+
+            Scenario 1:
+                - input: 10.1007/978-3-030-57717-9_36
+                - output: the reference metadata
+            
+            Scenario 1:
+                - input: false_id
+                - output: None
+        '''
+
+        input1 = '10.1007/978-3-030-57717-9_36'
+        input2 = 'false_id'
+        api_url_base = 'http://dx.doi.org/'
+        assert Helper.call_api(api_url_base + input1) != None
+        assert Helper.call_api(api_url_base + input2) == None
+    
+
     
     
 
