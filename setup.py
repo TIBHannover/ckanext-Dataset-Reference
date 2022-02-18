@@ -16,7 +16,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='2.0.0',
+    version='2.0.1',
 
     description='''This CKAN extension ables CKAN users to link references to their dataset. A reference can be a publication or another dataset. The extension embeds the added references to the target dataset view as a table of citations.''',
     long_description=long_description,
