@@ -86,7 +86,12 @@ class Helper():
     '''
     def process_bibtex(bibtex_string):
         parser = BibTexParser(common_strings=True)
-        parsed_bibtex_object =  bibtexparser.loads(bibtex_string, parser).entries[0]
+        parsed_bibtex_object =  bibtexparser.loads(bibtex_string, parser)
+        if len(parsed_bibtex_object.entries) != 0:
+            parsed_bibtex_object = parsed_bibtex_object.entries[0]
+        else:
+            return None
+
         citation = None
         if parsed_bibtex_object:
             citation = CitationFromatter.create_citation(parsed_bibtex_object)
@@ -356,7 +361,7 @@ class Helper():
 
 
     '''
-        find the selected item for the dit mode
+        find the selected item for the edit mode
     '''
     def find_selected(item, target):
         for su in target:
