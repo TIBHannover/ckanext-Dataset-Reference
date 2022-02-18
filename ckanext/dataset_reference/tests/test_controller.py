@@ -18,7 +18,8 @@ import ckan.lib.create_test_data as ctd
 @pytest.mark.usefixtures('with_plugins', 'with_request_context')
 class TestControllers(object):
 
-    def __init__(self) -> None:
+    @pytest.fixture(autouse=True)
+    def intial(self):
         sysadmin_user = model.User.get("testsysadmin")
         self.auth = {u"Authorization": str(sysadmin_user.apikey)}
 
@@ -80,7 +81,7 @@ class TestControllers(object):
             'doi_url': input3,
         }
         
-        response = app.post(dest_url, data=data, extra_environ=auth)
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
         assert 'There is no information about this DOI URL or ID' in response.body
 
 
@@ -106,6 +107,50 @@ class TestControllers(object):
         
         response = app.post(dest_url, data=data, extra_environ=self.auth)
         assert 'Please enter a valid BibTex format.' in response.body
+    
+
+
+    def test_check_authors_format(self, app):
+        '''
+            Check authors list of names is in correct format.
+        '''
+
+        format1 = 'name,family;name,family;name,family'
+        format2 = 'name,family;name,family name,family;'
+        format3 = 'name,family;name,;'
+        format4 = 'name,family;name;'
+
+        dest_url = h.url_for('dataset_reference.check_authors_format')
+
+        data = {
+            'authors_string': format1,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
+        assert '1' in response.body
+
+        data = {
+            'authors_string': format2,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
+        assert '0' in response.body
+
+        data = {
+            'authors_string': format3,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
+        assert '0' in response.body
+
+        data = {
+            'authors_string': format4,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
+        assert '0' in response.body
+
+
 
 
 
