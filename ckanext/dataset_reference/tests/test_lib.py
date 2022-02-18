@@ -73,6 +73,28 @@ class TestLibraryFunctions(object):
         input2 = 'url_with_false_id'
         assert Helper.process_doi_link(input1).get('cite') != None
         assert Helper.process_doi_link(input2) == None
+    
+
+    def test_check_doi_validity(self):
+        '''
+            Checks a doi id exist or not based on the doi.org API.
+            
+            Scenario 1:
+                - input: 'https://doi.org/10.1007/978-3-030-57717-9_36'
+                - output: True
+            
+            Scenario 2:
+                - input: 'url_with_false_id'
+                - output: None
+        '''
+
+        input1 = 'https://doi.org/10.1007/978-3-030-57717-9_36'
+        input2 = 'url_with_false_id'
+        assert Helper.check_doi_validity(input1) == True
+        assert Helper.check_doi_validity(input2) == None
+    
+    
+
 
     
 
