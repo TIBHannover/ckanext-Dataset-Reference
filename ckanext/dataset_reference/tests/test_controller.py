@@ -18,30 +18,30 @@ import ckan.lib.create_test_data as ctd
 @pytest.mark.usefixtures('with_plugins', 'with_request_context')
 class TestControllers(object):
 
-    @pytest.mark.usefixtures('clean_db', 'with_plugins', 'with_request_context')
-    def test_add_reference_with_doi_when_doi_is_valid(self, app, migrate_db_for):
-        '''
-            A user has to be able to add a reference
-            with a doi url
-        '''
-        # ctd.CreateTestData.create()
-        migrate_db_for("dataset_reference")
-        sysadmin_user = model.User.get("testsysadmin")
-        owner_org = factories.Organization(users=[{
-            'name': sysadmin_user.id,
-            'capacity': 'member'
-        }])
-        dataset = factories.Dataset(owner_org=owner_org['id'])  
-        auth = {u"Authorization": str(sysadmin_user.apikey)}
-        data = {
-            'package_id': dataset['id'],
-            'doi_or_bibtex': 'doi',
-            'doi': 'https://doi.org/10.1007/978-3-030-57717-9_36'
-        }
-        dest_url = h.url_for('dataset_reference.save_doi')
-        response = app.post(dest_url, data=data, extra_environ=auth)    
-        assert response.status_code == 200
-        assert True == True
+    # @pytest.mark.usefixtures('clean_db', 'with_plugins', 'with_request_context')
+    # def test_add_reference_with_doi_when_doi_is_valid(self, app, migrate_db_for):
+    #     '''
+    #         A user has to be able to add a reference
+    #         with a doi url
+    #     '''
+    #     # ctd.CreateTestData.create()
+    #     migrate_db_for("dataset_reference")
+    #     sysadmin_user = model.User.get("testsysadmin")
+    #     owner_org = factories.Organization(users=[{
+    #         'name': sysadmin_user.id,
+    #         'capacity': 'member'
+    #     }])
+    #     dataset = factories.Dataset(owner_org=owner_org['id'])  
+    #     auth = {u"Authorization": str(sysadmin_user.apikey)}
+    #     data = {
+    #         'package_id': dataset['id'],
+    #         'doi_or_bibtex': 'doi',
+    #         'doi': 'https://doi.org/10.1007/978-3-030-57717-9_36'
+    #     }
+    #     dest_url = h.url_for('dataset_reference.save_doi')
+    #     response = app.post(dest_url, data=data, extra_environ=auth)    
+    #     assert response.status_code == 200
+    #     assert True == True
     
 
 
@@ -54,7 +54,6 @@ class TestControllers(object):
         input1 = 'https://doi.org/10.1007/978-3-030-57717-9_36'
         input2 = '10.1007/978-3-030-57717-9_36'
         input3 = 'https://example.org/10.1007/978-3-030-57717-9_36'
-        ctd.CreateTestData.create()
         
         sysadmin_user = model.User.get("testsysadmin")
         auth = {u"Authorization": str(sysadmin_user.apikey)}
@@ -65,6 +64,20 @@ class TestControllers(object):
         
         response = app.post(dest_url, data=data, extra_environ=auth)
         assert '1' in response.body
+
+        data = {
+            'doi_url': input2,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=auth)
+        assert '1' in response.body
+
+        data = {
+            'doi_url': input3,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=auth)
+        assert 'There is no information about this DOI URL or ID' in response.body
         
 
 
