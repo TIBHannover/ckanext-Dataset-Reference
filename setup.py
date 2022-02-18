@@ -16,17 +16,17 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.0.1',
+    version='2.0.0',
 
-    description='''''',
+    description='''This CKAN extension ables CKAN users to link references to their dataset. A reference can be a publication or another dataset. The extension embeds the added references to the target dataset view as a table of citations.''',
     long_description=long_description,
     long_description_content_type="text/markdown",
 
     # The project's main homepage.
-    url='https://github.com//ckanext-Dataset-Reference',
+    url='https://github.com/TIBHannover/ckanext-Dataset-Reference',
 
     # Author details
-    author='''p.oladazimi''',
+    author='''Pooya Oladazimi, Technische Informationsbibliothek(TIB)''',
     author_email='''pooya.oladazimi@tib.eu''',
 
     # Choose your license
@@ -38,14 +38,14 @@ setup(
         # 3 - Alpha
         # 4 - Beta
         # 5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
     ],
 
 
