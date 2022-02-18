@@ -18,6 +18,12 @@ import ckan.lib.create_test_data as ctd
 @pytest.mark.usefixtures('with_plugins', 'with_request_context')
 class TestControllers(object):
 
+    def __init__(self) -> None:
+        sysadmin_user = model.User.get("testsysadmin")
+        self.auth = {u"Authorization": str(sysadmin_user.apikey)}
+
+
+
     # @pytest.mark.usefixtures('clean_db', 'with_plugins', 'with_request_context')
     # def test_add_reference_with_doi_when_doi_is_valid(self, app, migrate_db_for):
     #     '''
@@ -55,21 +61,19 @@ class TestControllers(object):
         input2 = '10.1007/978-3-030-57717-9_36'
         input3 = 'https://example.org/10.1007/978-3-030-57717-9_36'
         
-        sysadmin_user = model.User.get("testsysadmin")
-        auth = {u"Authorization": str(sysadmin_user.apikey)}
         dest_url = h.url_for('dataset_reference.doi_is_valid')
         data = {
             'doi_url': input1,
         }
         
-        response = app.post(dest_url, data=data, extra_environ=auth)
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
         assert '1' in response.body
 
         data = {
             'doi_url': input2,
         }
         
-        response = app.post(dest_url, data=data, extra_environ=auth)
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
         assert '1' in response.body
 
         data = {
@@ -78,7 +82,31 @@ class TestControllers(object):
         
         response = app.post(dest_url, data=data, extra_environ=auth)
         assert 'There is no information about this DOI URL or ID' in response.body
+
+
+
+    def test_bibtex_is_valid(self, app):
+        '''
+            test the validity of a bibtex input.
+        '''
         
+        bibtext1 = "@article{einstein2012albert,title={Albert Einstein Quotes},author={Einstein, Albert},journal={Retrieved from BrainyQuote. com},year={2012}}"
+        bibtext2 = "@a{einstein2012albert,title={Albert Einstein Quotes},author={Einstein, Albert},journal={Retrieved from BrainyQuote. com},year={2012}}"
+        dest_url = h.url_for('dataset_reference.bibtex_is_valid')
+        data = {
+            'bibtex': bibtext1,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
+        assert '1' in response.body
+
+        data = {
+            'bibtex': bibtext2,
+        }
+        
+        response = app.post(dest_url, data=data, extra_environ=self.auth)
+        assert 'Please enter a valid BibTex format.' in response.body
+
 
 
 
