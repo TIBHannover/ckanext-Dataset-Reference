@@ -13,7 +13,7 @@ import ckan.lib.create_test_data as ctd
 
 
 @pytest.mark.usefixtures('clean_db', 'with_plugins', 'with_request_context')
-class TestDatasetReference(object):
+class TestControllers(object):
 
 
 
