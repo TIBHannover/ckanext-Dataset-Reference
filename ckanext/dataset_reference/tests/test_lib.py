@@ -35,6 +35,7 @@ class TestLibraryFunctions(object):
         assert Helper.parse_doi_id(input3) == '10.1007/978-3-030-57717-9_36'
     
 
+
     def test_call_api(self):
         '''
             test the calling of doi.org api for fetching a reference metadata based on doi id.
@@ -74,6 +75,7 @@ class TestLibraryFunctions(object):
         assert Helper.process_doi_link(input1).get('cite') != None
         assert Helper.process_doi_link(input2) == None
     
+
 
     def test_check_doi_validity(self):
         '''
@@ -119,7 +121,19 @@ class TestLibraryFunctions(object):
         assert Helper.process_bibtex(bibtext2) == None
 
 
+    def test_format_authors(self):
+        '''
+            test the formating authors name:
 
+            Example:
+                Input = "Author1;Author2;Author3;"
+                Output = "Author1 and Author2 and Author3"
+        '''
+
+        input1 = "Author1;Author2;Author3;"
+        assert Helper.format_authors(input1) == "Author1 and Author2 and Author3"
+    
+    
     
 
  
