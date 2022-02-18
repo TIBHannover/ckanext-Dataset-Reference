@@ -55,7 +55,25 @@ class TestLibraryFunctions(object):
         assert Helper.call_api(api_url_base + input2) == None
     
 
-    
+
+    def test_process_doi_link(self):
+        '''
+            The process_doi_link function parse the metadata returned by calling the doi.org API.
+
+            Scenario 1:
+                - input: 'https://doi.org/10.1007/978-3-030-57717-9_36'
+                - output: a dictionary
+            
+            Scenario 2:
+                - input: 'url_with_false_id'
+                - output: None
+        '''
+
+        input1 = 'https://doi.org/10.1007/978-3-030-57717-9_36'
+        input2 = 'url_with_false_id'
+        assert Helper.process_doi_link(input1).get('cite') != None
+        assert Helper.process_doi_link(input2) == None
+
     
 
  
