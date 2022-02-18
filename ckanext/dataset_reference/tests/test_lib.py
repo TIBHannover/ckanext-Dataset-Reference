@@ -93,7 +93,31 @@ class TestLibraryFunctions(object):
         assert Helper.check_doi_validity(input1) == True
         assert Helper.check_doi_validity(input2) == None
     
-    
+
+
+    def test_process_bibtex(self):
+        '''
+            test the processing a bibtex citation data.
+
+            Input:
+                - bibtext citation data as string
+
+            Example input:
+                @article{einstein2012albert,
+                    title={Albert Einstein Quotes},
+                    author={Einstein, Albert},
+                    journal={Retrieved from BrainyQuote. com},
+                    year={2012}
+                }
+            
+            Return: citation string
+        '''
+
+        bibtext1 = "@article{einstein2012albert,title={Albert Einstein Quotes},author={Einstein, Albert},journal={Retrieved from BrainyQuote. com},year={2012}}"
+        bibtext2 = "@a{einstein2012albert,title={Albert Einstein Quotes},author={Einstein, Albert},journal={Retrieved from BrainyQuote. com},year={2012}}"
+        assert Helper.process_bibtex(bibtext1) != None
+        assert Helper.process_bibtex(bibtext2) == None
+
 
 
     
