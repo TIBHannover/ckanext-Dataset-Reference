@@ -1,10 +1,6 @@
 # encoding: utf-8
 
-import pytest
-import ckan.tests.factories as factories
-import ckan.lib.helpers as h
-import ckan.model as model
-import ckan.lib.create_test_data as ctd
+
 from ckanext.dataset_reference.libs.helper import Helper
 
 
@@ -121,6 +117,7 @@ class TestLibraryFunctions(object):
         assert Helper.process_bibtex(bibtext2) == None
 
 
+
     def test_format_authors(self):
         '''
             test the formating authors name:
@@ -133,7 +130,7 @@ class TestLibraryFunctions(object):
         input1 = "Author1;Author2;Author3;"
         assert Helper.format_authors(input1) == "Author1 and Author2 and Author3"
     
-    
+
     
 
  
