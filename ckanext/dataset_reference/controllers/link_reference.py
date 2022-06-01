@@ -1,8 +1,9 @@
 # encoding: utf-8
 
-from flask import redirect, request, render_template
+from flask import redirect, request, render_template, Markup, escape
 from sqlalchemy.sql.expression import false, true
 from sqlalchemy.sql.operators import all_op
+from yaml import Mark
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
@@ -89,6 +90,8 @@ class LinkReferenceController():
             return_rows += Helper.create_table_row(meta_data, source.id, Helper.check_access_edit_package(package['id']))
         
         if return_rows != "":
+            return_rows = return_rows.replace("<script>", "")
+            return_rows = return_rows.replace("</script>", "")
             return return_rows
         
         return '0'
