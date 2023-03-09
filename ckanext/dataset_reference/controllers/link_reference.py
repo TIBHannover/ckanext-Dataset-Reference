@@ -25,8 +25,8 @@ class LinkReferenceController():
     '''
     def save_doi():
         package_id = request.form.get('package_id') 
-        entry_type = request.form.get('doi_or_bibtex')     
-        doi = request.form.get('doi')       
+        entry_type = request.form.get('doi_or_bibtex')
+        doi = request.form.get('doi')
         bibtex = request.form.get('bibtex')
         if not Helper.check_access_edit_package(package_id):
             toolkit.abort(403, 'You are not authorized to access this function')
@@ -56,10 +56,20 @@ class LinkReferenceController():
             
             record = PackageReferenceLink(reference_object)
             record.save()
+
+            package_extras = package.get('extras')
+            if not package_extras:
+                package_extras = []
+            citation_for_extra = reference_object['citation'].replace("'", "''")
+            citation_for_extra = citation_for_extra.replace('"', '\\"')        
+            package_extras.append({"key": "citation", "value": citation_for_extra})
+            package['extras'] = package_extras           
+            toolkit.get_action('package_update')({},package)
             return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True))  
 
         except:
             return toolkit.abort(403, "bad request")
+            # raise
 
 
     '''
