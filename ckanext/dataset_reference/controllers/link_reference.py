@@ -1,9 +1,7 @@
 # encoding: utf-8
 
-from flask import redirect, request, render_template, Markup, escape
-from sqlalchemy.sql.expression import false, true
-from sqlalchemy.sql.operators import all_op
-from yaml import Mark
+from flask import redirect, request, render_template
+from sqlalchemy.sql.expression import false
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 from ckanext.dataset_reference.models.package_reference_link import PackageReferenceLink
@@ -56,11 +54,8 @@ class LinkReferenceController():
             
             record = PackageReferenceLink(reference_object)
             record.save()
+            Helper.force_package_update(package)
             
-            package_extras = []            
-            package_extras.append({"key": "citation", "value": "True"})
-            package['extras'] = package_extras           
-            toolkit.get_action('package_update')({},package)
             return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True)) 
 
         except:
@@ -145,10 +140,7 @@ class LinkReferenceController():
         try:            
             doi_obj.delete()
             doi_obj.commit()            
-            package_extras = []                   
-            package_extras.append({"key": "citation", "value": "True"})
-            package['extras'] = package_extras           
-            toolkit.get_action('package_update')({},package)
+            Helper.force_package_update(package)
             return  redirect(h.url_for('dataset.read', id=str(package_name) ,  _external=True)) 
 
         except:
@@ -196,11 +188,7 @@ class LinkReferenceController():
                     reference_object['adding_method'] = ADDING_METHOD_MANUAL
                     record = PackageReferenceLink(reference_object)
                     record.save()
-
-                    package_extras = []                   
-                    package_extras.append({"key": "citation", "value": "True"})
-                    package['extras'] = package_extras           
-                    toolkit.get_action('package_update')({},package)                  
+                    Helper.force_package_update(package)                 
 
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
 
@@ -266,11 +254,7 @@ class LinkReferenceController():
                     record = PackageReferenceLink({}).get_by_id(id=request.form.get('ref_id'))
                     record = Helper.update_ref_record(request, record, citation)
                     record.commit()
-
-                    package_extras = []                   
-                    package_extras.append({"key": "citation", "value": "True"})
-                    package['extras'] = package_extras           
-                    toolkit.get_action('package_update')({},package)                    
+                    Helper.force_package_update(package)
 
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
 

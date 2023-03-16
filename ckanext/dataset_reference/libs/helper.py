@@ -484,3 +484,10 @@ class Helper():
         modal += '</div>'
                 
         return modal
+    
+
+    def force_package_update(package):
+        package_extras = []            
+        package_extras.append({"key": "citation", "value": "True"})
+        package['extras'] = package_extras           
+        toolkit.get_action('package_update')({},package)
