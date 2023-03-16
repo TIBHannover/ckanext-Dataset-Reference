@@ -56,16 +56,12 @@ class LinkReferenceController():
             
             record = PackageReferenceLink(reference_object)
             record.save()
-
-            package_extras = package.get('extras')
-            if not package_extras:
-                package_extras = []
-            citation_for_extra = reference_object['citation'].replace("'", "''")
-            citation_for_extra = citation_for_extra.replace('"', '\\"')        
-            package_extras.append({"key": "citation", "value": citation_for_extra})
+            
+            package_extras = []            
+            package_extras.append({"key": "citation", "value": "True"})
             package['extras'] = package_extras           
             toolkit.get_action('package_update')({},package)
-            return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True))  
+            return  redirect(h.url_for('dataset.read', id=str(package_id) ,  _external=True)) 
 
         except:
             return toolkit.abort(403, "bad request")
@@ -148,10 +144,15 @@ class LinkReferenceController():
             toolkit.abort(403, 'You are not authorized to access this function')
         try:            
             doi_obj.delete()
-            doi_obj.commit()
+            doi_obj.commit()            
+            package_extras = []                   
+            package_extras.append({"key": "citation", "value": "True"})
+            package['extras'] = package_extras           
+            toolkit.get_action('package_update')({},package)
             return  redirect(h.url_for('dataset.read', id=str(package_name) ,  _external=True)) 
 
         except:
+            # raise
             return toolkit.abort(403, "bad request")
     
 
@@ -194,7 +195,12 @@ class LinkReferenceController():
                     reference_object = Helper.create_object_for_db(request, citation)
                     reference_object['adding_method'] = ADDING_METHOD_MANUAL
                     record = PackageReferenceLink(reference_object)
-                    record.save()                    
+                    record.save()
+
+                    package_extras = []                   
+                    package_extras.append({"key": "citation", "value": "True"})
+                    package['extras'] = package_extras           
+                    toolkit.get_action('package_update')({},package)                  
 
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
 
@@ -259,7 +265,12 @@ class LinkReferenceController():
                 if citation != "":
                     record = PackageReferenceLink({}).get_by_id(id=request.form.get('ref_id'))
                     record = Helper.update_ref_record(request, record, citation)
-                    record.commit()                    
+                    record.commit()
+
+                    package_extras = []                   
+                    package_extras.append({"key": "citation", "value": "True"})
+                    package['extras'] = package_extras           
+                    toolkit.get_action('package_update')({},package)                    
 
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
 
