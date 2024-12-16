@@ -15,11 +15,11 @@ import ckan.lib.create_test_data as ctd
 
 
 @pytest.mark.ckan_config('ckan.plugins', 'dataset_reference')
-@pytest.mark.usefixtures('with_plugins', 'with_request_context')
+@pytest.mark.usefixtures('clean_db', 'with_plugins', 'with_request_context')
 class TestControllers(object):
 
     @pytest.fixture(autouse=True)
-    def intial(self):
+    def intial(self, clean_db, clean_index):
         ctd.CreateTestData.create()
         sysadmin_user = model.User.get("testsysadmin")
         self.auth = {u"Authorization": str(sysadmin_user.apikey)}
