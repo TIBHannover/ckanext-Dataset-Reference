@@ -19,7 +19,7 @@ import ckan.lib.create_test_data as ctd
 class TestControllers(object):
 
     @pytest.fixture(autouse=True)
-    def intial(self, clean_db, clean_index):
+    def intial(self):
         ctd.CreateTestData.create()
         sysadmin_user = model.User.get("testsysadmin")
         self.auth = {u"Authorization": str(sysadmin_user.apikey)}
