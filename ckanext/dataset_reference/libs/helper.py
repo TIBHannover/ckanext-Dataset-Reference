@@ -11,7 +11,7 @@ from datetime import datetime
 from ckanext.dataset_reference.libs.citation_formatter import CitationFromatter
 from datetime import datetime as _time
 from bibtexparser.bparser import BibTexParser
-from flask import Markup
+from markupsafe import Markup
 
 
 Base_doi_api_url = "http://dx.doi.org/"
@@ -445,7 +445,7 @@ class Helper():
     '''
     def create_table_row(meta_data, object_id, is_auth_to_delete):
         row = '<tr>'
-        row = row +  '<td>' + Markup.striptags(meta_data['cite']) + '</td>'   
+        row = row +  '<td>' + Markup(meta_data['cite']).striptags() + '</td>'
         if meta_data['link'] and meta_data['link'] != '':      
             row = row +  '<td><a href="' +  meta_data['link'] + '" target="_blank">Link</a></td>'
         else:

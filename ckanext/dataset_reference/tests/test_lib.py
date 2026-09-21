@@ -129,6 +129,19 @@ class TestLibraryFunctions(object):
 
         input1 = "Author1;Author2;Author3;"
         assert Helper.format_authors(input1) == "Author1 and Author2 and Author3"
+
+    def test_create_table_row_strips_markup_from_citation(self):
+        metadata = {
+            "cite": "<em>Example citation</em>",
+            "link": "",
+            "adding_method": "1",
+        }
+
+        row = Helper.create_table_row(metadata, object_id=1,
+                                      is_auth_to_delete=False)
+
+        assert "<td>Example citation</td>" in row
+        assert "<em>" not in row
     
 
     
