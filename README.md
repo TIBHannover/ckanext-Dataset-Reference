@@ -17,7 +17,7 @@ Compatibility with core CKAN versions:
 | --------------- | ------------- |
 |  2.9 | No  | |
 | 2.10 | Yes | |
-| 2.11 | No  | |
+| 2.11 | Yes | |
 
 
 
@@ -60,5 +60,4 @@ OR, Clone the source and install it on the virtualenv (Suggested location: /usr/
 To run the tests, do:
 
     pytest --ckan-ini=test.ini  --disable-pytest-warnings  ckanext/dataset_reference/tests/
-
 
