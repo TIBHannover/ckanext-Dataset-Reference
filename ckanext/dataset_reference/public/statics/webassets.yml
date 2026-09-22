@@ -6,7 +6,6 @@ publication-info-table-js:
       - vendor/vendor
       - vendor/bootstrap
       - vendor/jquery
-      - vendor/select2
   contents:
     - publication_info_table.js
 
@@ -29,7 +28,6 @@ publication-add-manually-js:
       - vendor/vendor
       - vendor/bootstrap
       - vendor/jquery
-      - vendor/select2
   contents:
     - add_manually.js
 
@@ -46,6 +44,5 @@ publication-add-reference-js:
       - vendor/vendor
       - vendor/bootstrap
       - vendor/jquery
-      - vendor/select2
   contents:
     - add_reference.js
