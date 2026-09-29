@@ -2,10 +2,12 @@ $(document).ready(function(){
     $('#ref_submit_btn').click(function(e){    
         if($('#doi_or_bibtex').val() === 'doi'){  // the entry is a doi url/id
             let doi_input = $('#doi').val();
+            let form_data = $('#ref-form').serializeArray();
+            form_data.push({name: 'doi_url', value: doi_input});
             $.ajax({
                 url: $('#doi-validity-url').val(),
                 cache:false,   
-                data: {'doi_url': doi_input},            
+                data: form_data,
                 type: "POST",
                 success: function(result){
                     if(result != '1'){                               
@@ -22,7 +24,7 @@ $(document).ready(function(){
             $.ajax({
                 url: $('#bibtex-validity-url').val(),
                 cache:false,   
-                data: {'bibtex': bibtex_input},            
+                data: $('#ref-form').serialize(),
                 type: "POST",
                 success: function(result){
                     if(result != '1'){                               
