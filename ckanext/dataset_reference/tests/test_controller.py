@@ -5,11 +5,22 @@
 '''
 
 import pytest
+from pathlib import Path
 
 import ckan.tests.factories as factories
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.lib.create_test_data as ctd
+
+
+def test_package_show_calls_use_ckan_211_id_argument():
+    controller_root = Path(__file__).parents[1] / "controllers"
+    offenders = [
+        path.name
+        for path in controller_root.glob("*.py")
+        if "name_or_id" in path.read_text()
+    ]
+    assert offenders == []
 
 
 

@@ -33,7 +33,7 @@ class LinkReferenceController():
         reference_object['create_at'] = _time.now()
 
         try:
-            package = toolkit.get_action('package_show')({}, {'name_or_id': package_id})
+            package = toolkit.get_action('package_show')({}, {'id': package_id})
             reference_object['package_name'] = package['name']
 
              # set fields for a doi url/id
@@ -71,7 +71,7 @@ class LinkReferenceController():
         reference_object = {}
         reference_object['package_name'] = name
         res_object = PackageReferenceLink(reference_object)
-        package = toolkit.get_action('package_show')({}, {'name_or_id': name})
+        package = toolkit.get_action('package_show')({}, {'id': name})
         result = res_object.get_by_package(name=name)
         return_rows = ""
         if result == false: ## there is no reference for this dataset
@@ -134,7 +134,7 @@ class LinkReferenceController():
         res_object = PackageReferenceLink({})
         doi_obj = res_object.get_by_id(id=doi_id)
         package_name = doi_obj.package_name
-        package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+        package = toolkit.get_action('package_show')({}, {'id': package_name})
         if not Helper.check_access_edit_package(package['id']):
             toolkit.abort(403, 'You are not authorized to access this function')
         try:            
@@ -152,7 +152,7 @@ class LinkReferenceController():
         render the add reference manually view
     '''
     def add_publication_manually(package_name):
-        package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+        package = toolkit.get_action('package_show')({}, {'id': package_name})
         publication_types = Helper.get_publication_types_dropdown_content()
         years = Helper.get_years_list()
         thesis_types = [{'value': 'PhD', 'text': 'PhD'}, {'value': 'Master', 'text': 'Master'}]
@@ -175,7 +175,7 @@ class LinkReferenceController():
     def save_publication_manually():
         try:
             package_name = request.form.get('package')
-            package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+            package = toolkit.get_action('package_show')({}, {'id': package_name})
             if request.form.get('cancel'):
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
                 
@@ -204,7 +204,7 @@ class LinkReferenceController():
     '''
     def edit_reference(package_name, ref_id):
         try:
-            package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+            package = toolkit.get_action('package_show')({}, {'id': package_name})
             if not Helper.check_access_edit_package(package['id']):
                 return toolkit.abort(403, 'You are not authorized to access this function')
             reference_object = {}
@@ -242,7 +242,7 @@ class LinkReferenceController():
     def save_edit_ref():
         try:
             package_name = request.form.get('package')
-            package = toolkit.get_action('package_show')({}, {'name_or_id': package_name})
+            package = toolkit.get_action('package_show')({}, {'id': package_name})
             if request.form.get('cancel'):
                 return h.url_for('dataset.read', id=str(package['id']) ,  _external=True)
                 
